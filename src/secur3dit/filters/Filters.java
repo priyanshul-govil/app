@@ -93,4 +93,63 @@ public class Filters {
         }
         return result;
     }
+
+    /**
+     * For the math, check [https://en.wikipedia.org/wiki/Sobel_operator]
+     */
+    public static BufferedImage detectEdges(BufferedImage image) {
+        int width = image.getWidth();
+        int height = image.getHeight();
+        int imageType = BufferedImage.TYPE_INT_RGB;
+
+        if (image.isAlphaPremultiplied()) {
+            imageType = BufferedImage.TYPE_INT_ARGB;
+        }
+
+        BufferedImage result = new BufferedImage(width, height, imageType);
+
+        int[] sobelSumX = new int[3];
+        int[] sobelSumY = new int[3];
+        int[] sobelXY = new int[3];
+
+        for (int i = 0; i < height; ++i) {
+            for (int j = 0; j < width; ++j) {
+                for (int k = 0; k < 3; ++k) {
+                    sobelSumX[k] = 0;
+                    sobelSumY[k] = 0;
+                }
+                
+                for (int m = 0; m < 3; ++m) {
+                    for (int n = 0; n < 3; ++n) {
+                        int indexI = i + m - 1;
+                        int indexJ = j + n - 1;
+
+                        if (Helpers.outOfBounds(indexI, height) || 
+                            Helpers.outOfBounds(indexJ, width)) {
+                                continue;
+                        }
+
+                        Color color = new Color(image.getRGB(indexJ, indexI));
+
+                        sobelSumX[0] += Helpers.sobelKernelX[m][n] * color.getRed();
+                        sobelSumX[1] += Helpers.sobelKernelX[m][n] * color.getGreen();
+                        sobelSumX[2] += Helpers.sobelKernelX[m][n] * color.getBlue();
+                        sobelSumY[0] += Helpers.sobelKernelX[m][n] * color.getRed();
+                        sobelSumY[1] += Helpers.sobelKernelX[m][n] * color.getGreen();
+                        sobelSumY[2] += Helpers.sobelKernelX[m][n] * color.getBlue();
+                    }
+                }
+
+                for (int k = 0; k < 3; ++k) {
+                    sobelXY[k] = (int)Math.round(Math.sqrt((sobelSumX[k] * sobelSumX[k] + 
+                                                            sobelSumY[k] * sobelSumY[k])));
+                    sobelXY[k] = Helpers.truncateIfNeeded(sobelXY[k]);
+                }
+
+                Color color = new Color(sobelXY[0], sobelXY[1], sobelXY[2]);
+                result.setRGB(j, i, color.getRGB());
+            }
+        }
+        return result;
+    }
 };

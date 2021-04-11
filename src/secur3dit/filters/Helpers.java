@@ -116,4 +116,7 @@ public class Helpers {
         Color finalColor = new Color(red, green, blue);
         return finalColor.getRGB();
     }
+
+    static final int[][] sobelKernelX = {{-1, 0, 1}, {-2, 0, 2}, {-1, 0, 1}};
+    static final int[][] sobelKernelY = {{-1, -2, -1}, {0, 0, 0}, {1, 2, 1}};
 };
