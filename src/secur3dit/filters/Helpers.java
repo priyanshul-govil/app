@@ -119,4 +119,29 @@ public class Helpers {
 
     static final int[][] sobelKernelX = {{-1, 0, 1}, {-2, 0, 2}, {-1, 0, 1}};
     static final int[][] sobelKernelY = {{-1, -2, -1}, {0, 0, 0}, {1, 2, 1}};
+
+    static void lightDial(BufferedImage image, double dial) {
+        double limit = (dial > 0.0) ? 255.0 : 0.0;
+        for (int i = 0; i < image.getHeight(); ++i) {
+            for (int j = 0; j < image.getWidth(); ++j) {
+                Color color = new Color(image.getRGB(j, i));
+                int newR = 0;
+                int newG = 0;
+                int newB = 0;
+                if (dial > 0.0) {
+                    newR = (int)linearInterpolation(color.getRed(), dial, limit);
+                    newG = (int)linearInterpolation(color.getGreen(), dial, limit);
+                    newB = (int)linearInterpolation(color.getBlue(), dial, limit);
+                }            
+                else {
+                    dial = -1.0 * dial;
+                    newR = (int)linearInterpolation(limit, dial, color.getRed());
+                    newG = (int)linearInterpolation(limit, dial, color.getGreen());
+                    newB = (int)linearInterpolation(limit, dial, color.getBlue());
+                }    
+                Color newColor = new Color(newR, newG, newB);
+                image.setRGB(j, i, newColor.getRGB());
+            }
+        }
+    }
 };

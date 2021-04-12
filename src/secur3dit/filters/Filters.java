@@ -152,4 +152,22 @@ public class Filters {
         }
         return result;
     }
+
+    public static BufferedImage brighten(BufferedImage image, double dial) {
+        if (dial < 0.0) {
+            return null;
+        }
+        BufferedImage result = Helpers.deepCopy(image);
+        Helpers.lightDial(result, dial);
+        return result;
+    }
+
+    public static BufferedImage darken(BufferedImage image, double dial) {
+        if (dial > 0.0) {
+            return null;
+        }
+        BufferedImage result = Helpers.deepCopy(image);
+        Helpers.lightDial(result, dial);
+        return result;   
+    }
 };
