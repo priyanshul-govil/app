@@ -17,8 +17,8 @@ public class Filters {
     public static BufferedImage mirror(BufferedImage image, boolean vertical) {
         BufferedImage result = Helpers.deepCopy(image);
         int height = result.getHeight();
-        int width  = result.getWidth();
-    
+        int width = result.getWidth();
+
         if (vertical) {
             for (int i = 0; i < height; ++i) {
                 for (int j = 0; j < width / 2; ++j) {
@@ -27,7 +27,7 @@ public class Filters {
                     result.setRGB(width - j - 1, i, temp);
                 }
             }
-        }
+        } 
         else {
             for (int j = 0; j < width; ++j) {
                 for (int i = 0; i < height / 2; ++i) {
@@ -41,11 +41,11 @@ public class Filters {
     }
 
     /**
-     * @param angle: floating-point degree, anti-clockwise
+     * @param angle: floating-point degree, anti-clockwise 
      * Produces a clipped image rotated by angle degrees,
-     * by treating the image as a rectangle on a cartesian plane
+     * by treating the image as a rectangle on a cartesian plane 
      * and using bilinear interpolation to find the pixel value at every co-ordinate that 
-     * will not have a black color after rotation. For more information about the math involved, 
+     * will not have a black color after rotation. For more information about the math involved,
      * visit [https://en.wikipedia.org/wiki/Bilinear_interpolation]
      */
     public static BufferedImage rotate(BufferedImage image, double angle) {
@@ -77,21 +77,21 @@ public class Filters {
                 double[] rasterPoints = Helpers.toRaster(cartesianPoints, centreX, centreY);
                 int[] floored = Helpers.floorPoints(rasterPoints);
                 int[] ceiled = Helpers.ceilPoints(rasterPoints);
-
+                
                 if (Helpers.outOfBounds(floored[0], width) || 
                     Helpers.outOfBounds(floored[1], height) || 
                     Helpers.outOfBounds(ceiled[0], width) || 
                     Helpers.outOfBounds(ceiled[1], height)) {
                         continue;
                 }
-                
-                double deltaX = rasterPoints[0] - (double)floored[0];
-                double deltaY = rasterPoints[1] - (double)floored[1];
+
+                double deltaX = rasterPoints[0] - (double) floored[0];
+                double deltaY = rasterPoints[1] - (double) floored[1];
                 Color topLeft = new Color(image.getRGB(floored[0], floored[1]));
                 Color topRight = new Color(image.getRGB(ceiled[0], floored[1]));
                 Color bottomLeft = new Color(image.getRGB(floored[0], ceiled[1]));
                 Color bottomRight = new Color(image.getRGB(ceiled[0], ceiled[1]));
-                int finalColor = Helpers.bilinearInterpolation(topLeft, topRight, bottomLeft, 
+                int finalColor = Helpers.bilinearInterpolation(topLeft, topRight, bottomLeft,
                     bottomRight, deltaX, deltaY);
                 result.setRGB(j, i, finalColor);
             }
@@ -123,7 +123,7 @@ public class Filters {
                     sobelSumX[k] = 0;
                     sobelSumY[k] = 0;
                 }
-                
+
                 for (int m = 0; m < 3; ++m) {
                     for (int n = 0; n < 3; ++n) {
                         int indexI = i + m - 1;
@@ -146,8 +146,8 @@ public class Filters {
                 }
 
                 for (int k = 0; k < 3; ++k) {
-                    sobelXY[k] = (int)Math.round(Math.sqrt((sobelSumX[k] * sobelSumX[k] + 
-                                                            sobelSumY[k] * sobelSumY[k])));
+                    sobelXY[k] = (int) Math.round(Math.sqrt((sobelSumX[k] * sobelSumX[k] + 
+                                                             sobelSumY[k] * sobelSumY[k])));
                     sobelXY[k] = Helpers.truncateIfNeeded(sobelXY[k]);
                 }
 
@@ -173,10 +173,12 @@ public class Filters {
         }
         BufferedImage result = Helpers.deepCopy(image);
         Helpers.lightDial(result, dial);
-        return result;   
+        return result;
     }
 
-    public static void grayscale(BufferedImage img) {
+    public static BufferedImage grayscale(BufferedImage image) {
+        BufferedImage img = Helpers.deepCopy(image);
+
         int width = img.getWidth();
         int height = img.getHeight();
 
@@ -194,9 +196,12 @@ public class Filters {
                 img.setRGB(i, j, shadeOfGray.getRGB());
             }
         }
+        return img;
     }
 
-    public static void sepia(BufferedImage img) {
+    public static BufferedImage sepia(BufferedImage image) {
+        BufferedImage img = Helpers.deepCopy(image);
+
         int width = img.getWidth();
         int height = img.getHeight();
 
@@ -217,10 +222,13 @@ public class Filters {
                 img.setRGB(i, j, newColor.getRGB());
             }
         }
+        return img;
 
     }
 
-    public static void negative(BufferedImage img) {
+    public static BufferedImage negative(BufferedImage image) {
+        BufferedImage img = Helpers.deepCopy(image);
+
         int width = img.getWidth();
         int height = img.getHeight();
 
@@ -237,10 +245,13 @@ public class Filters {
                 img.setRGB(i, j, newColor.getRGB());
             }
         }
+        return img;
 
     }
 
-    public static void addWatermark(BufferedImage img, String watermarkText) {
+    public static BufferedImage addWatermark(BufferedImage image, String watermarkText) {
+        
+        BufferedImage img = Helpers.deepCopy(image);
         Graphics2D graphics = (Graphics2D) img.getGraphics();
 
         AlphaComposite alphaChannel = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.1f);
@@ -248,7 +259,7 @@ public class Filters {
         graphics.setComposite(alphaChannel);
         graphics.setColor(Color.BLACK);
         graphics.setFont(new Font("Arial", Font.BOLD, 64));
-        
+
         FontMetrics fontMetrics = graphics.getFontMetrics();
         Rectangle2D rectangle = fontMetrics.getStringBounds(watermarkText, graphics);
 
@@ -257,5 +268,7 @@ public class Filters {
 
         graphics.drawString(watermarkText, centerX, centerY);
         graphics.dispose();
+
+        return img;
     }
 }
