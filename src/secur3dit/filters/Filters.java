@@ -271,4 +271,145 @@ public class Filters {
 
         return img;
     }
+
+    static void boxBlur(BufferedImage source, BufferedImage target, int kernelRadius) {
+        int width = source.getWidth();
+        int height = source.getHeight();
+
+        double kernelCoefficient = 1.0 / ((2.0 * (double)kernelRadius) + 1.0);
+        // go through each row first, on the source itself
+        for (int i = 0; i < height; ++i) {
+            
+            Color fcolor = new Color(target.getRGB(0, i));
+            Color lastColor = new Color(target.getRGB(width - 1, i));
+            int sumR =  fcolor.getRed() * (kernelRadius + 1);
+            int sumG = fcolor.getGreen() * (kernelRadius + 1);
+            int sumB = fcolor.getBlue() * (kernelRadius + 1);
+
+            for (int j = 0; j < kernelRadius; ++j) {
+                Color color = new Color(target.getRGB(j, i));
+                sumR += color.getRed();
+                sumG += color.getGreen();
+                sumB += color.getBlue();
+            }            
+            int ti = 0;
+            int li = ti;
+            int ri = ti + kernelRadius;
+            for (int j = 0; j <= kernelRadius; ++j) {
+                Color color = new Color(target.getRGB(ri, i));
+                sumR += (color.getRed() - fcolor.getRed());
+                sumG += (color.getGreen() - fcolor.getGreen());
+                sumB += (color.getBlue()- fcolor.getBlue());
+                ++ri;
+                int finalR = (int)Math.round((double)sumR * kernelCoefficient);
+                int finalG = (int)Math.round((double)sumG * kernelCoefficient);
+                int finalB = (int)Math.round((double)sumB * kernelCoefficient);
+                Color finalColor = new Color(finalR, finalG, finalB);
+                source.setRGB(ti, i, finalColor.getRGB());
+                ++ti;
+            }
+
+            for (int j = kernelRadius + 1; j < width - kernelRadius; ++j) {
+                Color color = new Color(target.getRGB(ri, i));
+                Color lcolor = new Color(target.getRGB(li, i));
+                ++li;
+                sumR += (color.getRed() - lcolor.getRed());
+                sumG += (color.getGreen() - lcolor.getGreen());
+                sumB += (color.getBlue()- lcolor.getBlue());
+                ++ri;
+                int finalR = (int)Math.round((double)sumR * kernelCoefficient);
+                int finalG = (int)Math.round((double)sumG * kernelCoefficient);
+                int finalB = (int)Math.round((double)sumB * kernelCoefficient);
+                Color finalColor = new Color(finalR, finalG, finalB);
+                source.setRGB(ti, i, finalColor.getRGB());
+                ++ti;
+            }
+
+            for (int j = width - kernelRadius; j < width; ++j) {
+                Color lcolor = new Color(target.getRGB(li, i));
+                ++li;
+                sumR += (lastColor.getRed() - lcolor.getRed());
+                sumG += (lastColor.getGreen() - lcolor.getGreen());
+                sumB += (lastColor.getBlue()- lcolor.getBlue());
+                
+                int finalR = (int)Math.round((double)sumR * kernelCoefficient);
+                int finalG = (int)Math.round((double)sumG * kernelCoefficient);
+                int finalB = (int)Math.round((double)sumB * kernelCoefficient);
+                Color finalColor = new Color(finalR, finalG, finalB);
+                source.setRGB(ti, i, finalColor.getRGB());
+                ++ti;
+            }
+        }
+
+        for (int i = 0; i < width; ++i) {
+            Color fcolor = new Color(source.getRGB(i, 0));
+            Color lastColor = new Color(source.getRGB(i, height - 1));
+            int sumR =  fcolor.getRed() * (kernelRadius + 1);
+            int sumG = fcolor.getGreen() * (kernelRadius + 1);
+            int sumB = fcolor.getBlue() * (kernelRadius + 1);
+
+            for (int j = 0; j < kernelRadius; ++j) {
+                Color color = new Color(source.getRGB(i, j));
+                sumR += color.getRed();
+                sumG += color.getGreen();
+                sumB += color.getBlue();
+            }            
+            int ti = 0;
+            int li = ti;
+            int ri = ti + kernelRadius;
+            for (int j = 0; j <= kernelRadius; ++j) {
+                Color color = new Color(source.getRGB(i, ri));
+                sumR += (color.getRed() - fcolor.getRed());
+                sumG += (color.getGreen() - fcolor.getGreen());
+                sumB += (color.getBlue()- fcolor.getBlue());
+                ++ri;
+                int finalR = (int)Math.round((double)sumR * kernelCoefficient);
+                int finalG = (int)Math.round((double)sumG * kernelCoefficient);
+                int finalB = (int)Math.round((double)sumB * kernelCoefficient);
+                Color finalColor = new Color(finalR, finalG, finalB);
+                target.setRGB(i, ti, finalColor.getRGB());
+                ++ti;
+            }
+
+            for (int j = kernelRadius + 1; j < height - kernelRadius; ++j) {
+                Color color = new Color(source.getRGB(i, ri));
+                Color lcolor = new Color(source.getRGB(i, li));
+                ++li;
+                sumR += (color.getRed() - lcolor.getRed());
+                sumG += (color.getGreen() - lcolor.getGreen());
+                sumB += (color.getBlue()- lcolor.getBlue());
+                ++ri;
+                int finalR = (int)Math.round((double)sumR * kernelCoefficient);
+                int finalG = (int)Math.round((double)sumG * kernelCoefficient);
+                int finalB = (int)Math.round((double)sumB * kernelCoefficient);
+                Color finalColor = new Color(finalR, finalG, finalB);
+                target.setRGB(i, ti, finalColor.getRGB());
+                ++ti;
+            }
+
+            for (int j = height - kernelRadius; j < height; ++j) {
+                Color lcolor = new Color(source.getRGB(i, li));
+                ++li;
+                sumR += (lastColor.getRed() - lcolor.getRed());
+                sumG += (lastColor.getGreen() - lcolor.getGreen());
+                sumB += (lastColor.getBlue()- lcolor.getBlue());
+                
+                int finalR = (int)Math.round((double)sumR * kernelCoefficient);
+                int finalG = (int)Math.round((double)sumG * kernelCoefficient);
+                int finalB = (int)Math.round((double)sumB * kernelCoefficient);
+                Color finalColor = new Color(finalR, finalG, finalB);
+                target.setRGB(i, ti, finalColor.getRGB());
+                ++ti;
+            }
+        }
+    }
+
+    public static BufferedImage gaussianBlur(BufferedImage image, int intensity) {
+        BufferedImage source = Helpers.deepCopy(image);
+        BufferedImage target = Helpers.deepCopy(image);
+        boxBlur(source, target, intensity);
+        boxBlur(target, source, intensity + 1);
+        boxBlur(source, target, intensity + 1);
+        return target;
+    }
 }
