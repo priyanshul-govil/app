@@ -144,4 +144,34 @@ public class Helpers {
             }
         }
     }
+
+    /**
+     * Takes a pixel value and reduces it
+     * to one of the 4 distinct values. If
+     * the value is invalid, the method returns 
+     * 255. The rules for deciding the values and 
+     * the number of distinct values can vary depending
+     * upon implementation. The idea here is to reduce 
+     * the number of distinct colors used in an image. 
+     */
+    static int reducePixel(int pixel) {
+
+        if (pixel < 64) {
+            return 0;
+        }
+
+        if (pixel >= 64 && pixel < 128) {
+            return 64;
+        }
+
+        if (pixel >= 128 && pixel < 192) {
+            return 128;
+        }
+
+        if (pixel >= 192 && pixel < 255) {
+            return 192;
+        }
+
+        return 255;
+    }
 };
