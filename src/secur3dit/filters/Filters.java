@@ -412,4 +412,35 @@ public class Filters {
         boxBlur(source, target, intensity + 1);
         return target;
     }
+
+    /**
+     * Takes an image and returns a posterized version of it. 
+     * Posterization achieves this by reducing the distinct pixels in 
+     * an image. We apply the Helpers.reducePixel() method on R,G,B 
+     * value of every pixel. 
+     */
+    public static BufferedImage posterize(BufferedImage image) {
+        
+        BufferedImage result = Helpers.deepCopy(image);
+        int width = image.getWidth();
+        int height = image.getHeight();
+    
+        for (int i = 0; i < height; ++i) {
+            for (int j = 0; j < width; ++j) {
+                // get the color
+                Color originalColor = new Color(result.getRGB(j, i));
+
+                // reduce the pixels
+                int red = Helpers.reducePixel(originalColor.getRed());
+                int green = Helpers.reducePixel(originalColor.getGreen());
+                int blue = Helpers.reducePixel(originalColor.getBlue());
+
+                // apply the color
+                Color finalColor = new Color(red, green, blue);
+                result.setRGB(j, i, finalColor.getRGB());
+            }
+        }
+
+        return result;
+    }
 }
