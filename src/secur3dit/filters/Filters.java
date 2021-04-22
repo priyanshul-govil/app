@@ -459,38 +459,38 @@ public class Filters {
         int height = image.getHeight();
 
         // Initialise average values
-        int avgRed = 0;
-        int avgGreen = 0;
-        int avgBlue = 0;
+        
         
         for (int i = 0; i < height; i += pixelWidth) {
             for (int j = 0; j < width; j += pixelWidth) {
 
-                // Check if the indices are such that we have a distinct submatrix
-                if (i % pixelWidth == 0 && j % pixelWidth == 0) {
+                int avgRed = 0;
+                int avgGreen = 0;
+                int avgBlue = 0;
 
-                    int totalRed = 0;
-                    int totalGreen = 0;
-                    int totalBlue = 0;
-                    int count = 0;
+                int totalRed = 0;
+                int totalGreen = 0;
+                int totalBlue = 0;
+                
+                int count = 0;
 
-                    // Traverse and add the pixel values
-                    for (int y = i; y < i + pixelWidth && y < height; ++y) {
-                        for (int x = j; x < j + pixelWidth && x < width; ++x) {
-                            Color color = new Color(result.getRGB(x, y));
+                // Traverse and add the pixel values
+                for (int y = i; y < i + pixelWidth && y < height; ++y) {
+                    for (int x = j; x < j + pixelWidth && x < width; ++x) {
+                        Color color = new Color(result.getRGB(x, y));
 
-                            totalRed += color.getRed();
-                            totalGreen += color.getGreen();
-                            totalBlue += color.getBlue();
-                            ++count;
-                        }
+                        totalRed += color.getRed();
+                        totalGreen += color.getGreen();
+                        totalBlue += color.getBlue();
+                        ++count;
                     }
-
-                    // Compute the average
-                    avgRed = totalRed/count;
-                    avgGreen = totalGreen/count;
-                    avgBlue = totalBlue/count;
                 }
+
+                // Compute the average
+                avgRed = totalRed/count;
+                avgGreen = totalGreen/count;
+                avgBlue = totalBlue/count;
+                
 
                 // Get the color made using the R,G,B values
                 Color finalColor = new Color(avgRed, avgGreen, avgBlue);
