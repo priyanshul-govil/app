@@ -443,4 +443,67 @@ public class Filters {
 
         return result;
     }
+    
+    /**
+     * Takes an image and returns a pixelated version of it.
+     * It needs an extra parameter, pixelRatio which can take values
+     * in the range [1, min(height - 1, width - 1)]. A square window of side
+     * length pixelRatio slides through the image, jumping at a length of 
+     * pixelRatio after each iteration. In each slide, it sets the R,G,B values 
+     * of every pixel to the average values in that window.
+     */
+    public static BufferedImage pixelate(BufferedImage image, int pixelRatio) {
+        
+        BufferedImage result = Helpers.deepCopy(image);
+        int width = image.getWidth();
+        int height = image.getHeight();
+
+        // Initialise average values
+        int avgRed = 0;
+        int avgGreen = 0;
+        int avgBlue = 0;
+        
+        for (int i = 0; i < height; i += pixelRatio) {
+            for (int j = 0; j < width; j += pixelRatio) {
+
+                // Check if the indices are such that we have a distinct submatrix
+                if (i % pixelRatio == 0 && j % pixelRatio == 0) {
+
+                    avgRed = 0;
+                    avgGreen = 0;
+                    avgBlue = 0;
+                    int count = 0;
+
+                    // Traverse and add the pixel values
+                    for (int y = i; y < i + pixelRatio && y < height; ++y) {
+                        for (int x = j; x < j + pixelRatio && x < width; ++x) {
+                            Color color = new Color(result.getRGB(x, y));
+
+                            avgRed += color.getRed();
+                            avgGreen += color.getGreen();
+                            avgBlue += color.getBlue();
+                            ++count;
+                        }
+                    }
+
+                    // Compute the average
+                    avgRed /= count;
+                    avgGreen /= count;
+                    avgBlue /= count;
+                }
+
+                // Get the color made using the R,G,B values
+                Color finalColor = new Color(avgRed, avgGreen, avgBlue);
+
+                // Set all pixels in the matrix to finalColor
+                for (int y = i; y < i + pixelRatio && y < height; ++y) {
+                    for (int x = j; x < j + pixelRatio && x < width; ++x) {
+                        result.setRGB(x, y, finalColor.getRGB());
+                    }
+                }
+            }
+        }
+        
+        return result;
+    }
 }
