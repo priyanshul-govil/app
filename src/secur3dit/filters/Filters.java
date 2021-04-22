@@ -443,4 +443,63 @@ public class Filters {
 
         return result;
     }
+    
+    /**
+     * Takes an image and returns a pixelated version of it.
+     * It needs an extra parameter, pixelWidth which can take values
+     * in the range [1, min(height - 1, width - 1)]. A square window of side
+     * length pixelWidth slides through the image, jumping at a length of 
+     * pixelWidth after each iteration. In each slide, it sets the R,G,B values 
+     * of every pixel to the average values in that window.
+     */
+    public static BufferedImage pixelate(BufferedImage image, int pixelWidth) {
+        
+        BufferedImage result = Helpers.deepCopy(image);
+        int width = image.getWidth();
+        int height = image.getHeight();
+
+        for (int i = 0; i < height; i += pixelWidth) {
+            for (int j = 0; j < width; j += pixelWidth) {
+
+                int avgRed = 0;
+                int avgGreen = 0;
+                int avgBlue = 0;
+
+                int totalRed = 0;
+                int totalGreen = 0;
+                int totalBlue = 0;
+
+                int count = 0;
+
+                // Traverse and add the pixel values
+                for (int y = i; y < i + pixelWidth && y < height; ++y) {
+                    for (int x = j; x < j + pixelWidth && x < width; ++x) {
+                        Color color = new Color(result.getRGB(x, y));
+
+                        totalRed += color.getRed();
+                        totalGreen += color.getGreen();
+                        totalBlue += color.getBlue();
+                        ++count;
+                    }
+                }
+
+                // Compute the average
+                avgRed = totalRed / count;
+                avgGreen = totalGreen / count;
+                avgBlue = totalBlue / count;
+                
+                // Get the color made using the R,G,B values
+                Color finalColor = new Color(avgRed, avgGreen, avgBlue);
+
+                // Set all pixels in the submatrix to finalColor
+                for (int y = i; y < i + pixelWidth && y < height; ++y) {
+                    for (int x = j; x < j + pixelWidth && x < width; ++x) {
+                        result.setRGB(x, y, finalColor.getRGB());
+                    }
+                }
+            }
+        }
+        
+        return result;
+    }
 }
