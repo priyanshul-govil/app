@@ -458,9 +458,6 @@ public class Filters {
         int width = image.getWidth();
         int height = image.getHeight();
 
-        // Initialise average values
-        
-        
         for (int i = 0; i < height; i += pixelWidth) {
             for (int j = 0; j < width; j += pixelWidth) {
 
@@ -471,7 +468,7 @@ public class Filters {
                 int totalRed = 0;
                 int totalGreen = 0;
                 int totalBlue = 0;
-                
+
                 int count = 0;
 
                 // Traverse and add the pixel values
@@ -487,15 +484,14 @@ public class Filters {
                 }
 
                 // Compute the average
-                avgRed = totalRed/count;
-                avgGreen = totalGreen/count;
-                avgBlue = totalBlue/count;
+                avgRed = totalRed / count;
+                avgGreen = totalGreen / count;
+                avgBlue = totalBlue / count;
                 
-
                 // Get the color made using the R,G,B values
                 Color finalColor = new Color(avgRed, avgGreen, avgBlue);
 
-                // Set all pixels in the matrix to finalColor
+                // Set all pixels in the submatrix to finalColor
                 for (int y = i; y < i + pixelWidth && y < height; ++y) {
                     for (int x = j; x < j + pixelWidth && x < width; ++x) {
                         result.setRGB(x, y, finalColor.getRGB());
