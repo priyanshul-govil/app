@@ -502,4 +502,58 @@ public class Filters {
         
         return result;
     }
+
+    /**
+     * Takes an image and returns a sharpened version of it
+     * with given intensity. The intensity parameter is used to produce
+     * a 3x3 kernel which will be convolved with the image. The process is 
+     * similar to blurring an image using box blur just once. Since the kernel 
+     * is just 3x3, the total steps for convolutionResult calculation in each 
+     * iteration will always be 9. Hence, this kernel is not made separable and 
+     * works in O(height * width), similar to box blur with a separable kernel 
+     * and varying kernelRadius. The intensity can theoretically range from 
+     * [0, infinity]. However, in practice, after a threshold, the higher values 
+     * would become pointless to use due to results that would not please the
+     * human eye. That threshold would depend upon how blurred the input image is.
+     */
+    public static BufferedImage sharpen(BufferedImage image, int intensity) {
+
+        BufferedImage result = Helpers.deepCopy(image);
+        int width = image.getWidth();
+        int height = image.getHeight();
+
+        // Get the kernel with applied intensity
+        int[][] kernel = Helpers.getSharpenKernel(intensity);
+
+        for (int i = 1; i < height - 1; ++i) {
+            for (int j = 1; j < width - 1; ++j) {
+
+                // Initialise to store the result of convolution
+                int[] convolutionResult = {0, 0, 0};
+
+                // Convolve
+                for (int x = -1; x <= 1; ++x) {
+                    for (int y = -1; y <= 1; ++y) {
+                        Color color = new Color(image.getRGB(j + x, i + y));
+                        convolutionResult[0] += kernel[x + 1][y + 1] * color.getRed();
+                        convolutionResult[1] += kernel[x + 1][y + 1] * color.getGreen();        
+                        convolutionResult[2] += kernel[x + 1][y + 1] * color.getBlue();
+                    }
+                }
+
+                // Truncate the values if they went out of bounds and store them
+                int finalRed = Helpers.truncateIfNeeded(convolutionResult[0]);
+                int finalGreen = Helpers.truncateIfNeeded(convolutionResult[1]);
+                int finalBlue = Helpers.truncateIfNeeded(convolutionResult[2]);
+
+                // Produce the color
+                Color finalColor = new Color(finalRed, finalGreen, finalBlue);
+
+                // Set the final color
+                result.setRGB(j, i, finalColor.getRGB());
+            }
+        }
+
+        return result;
+    }
 }
