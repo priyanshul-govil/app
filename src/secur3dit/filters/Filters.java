@@ -512,7 +512,7 @@ public class Filters {
      * iteration will always be 9. Hence, this kernel is not made separable and 
      * works in O(height * width), similar to box blur with a separable kernel 
      * and varying kernelRadius. The intensity can theoretically range from 
-     * [0, infinity]. However, in practice, after a threshold, the higher values 
+     * [0, infinity). However, in practice, after a threshold, the higher values 
      * would become pointless to use due to results that would not please the
      * human eye. That threshold would depend upon how blurred the input image is.
      */
