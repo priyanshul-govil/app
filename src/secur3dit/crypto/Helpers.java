@@ -92,4 +92,129 @@ final class Helpers {
             state[i] ^= key[i];
         }
     }
+
+    /**
+     * This function performs the key expansion for AES-256 encryption.
+     * It gives 15 round keys (14 rounds + 1 initial) from the initial key.
+     * 
+     * Standard letter notations are used from the algorithm on Wikipedia.
+     * Details at: https://en.wikipedia.org/wiki/AES_key_schedule
+     * 
+     * @param K     The initial key (char[32]) to be expanded into round keys.
+     * @return W    The final 15 round keys.
+     */
+    public static char[][] keyExpansion(char[] K) {
+
+        /**
+         * This inner class contains helper functions for keyExpansion.
+         * Details at: https://en.wikipedia.org/wiki/AES_key_schedule#The_key_schedule
+         */
+        final class keyExpansionHelpers {
+
+            public char[] bytesToWord(char b0, char b1, char b2, char b3) {
+                return new char[] { b0, b1, b2, b3 };
+            }
+
+            /**
+             * @param W     The resultant round keys.
+             * @param word  The word to be stored inside W.
+             * @param i     The word number.
+             */
+            public void wordToBytes(char[][] W, char[] word, int i) {
+                W[i / 4][4 * (i % 4) + 0] = word[0];
+                W[i / 4][4 * (i % 4) + 1] = word[1];
+                W[i / 4][4 * (i % 4) + 2] = word[2];
+                W[i / 4][4 * (i % 4) + 3] = word[3];
+            }
+            
+            public char[] rotWord(char[] word) {
+                char[] result = new char[word.length];
+                result[0] = word[1];
+                result[1] = word[2];
+                result[2] = word[3];
+                result[3] = word[0];
+                return result;
+            }
+
+            public char[] subWord(char[] word) {
+                char[] result = new char[word.length];
+                for (int i = 0; i < word.length; ++i) {
+                    result[i] = Constants.SBOX[word[i]];
+                }
+                return result;
+            }
+
+            public char[] xorWords(char[] first, char[] second) {
+                char[] result = new char[first.length];
+                for (int i = 0; i < first.length; ++i) {
+                    result[i] = (char) (first[i] ^ second[i]);
+                }
+                return result;
+            }
+        }
+        keyExpansionHelpers operations = new keyExpansionHelpers();
+        
+        int N = 8;
+        int R = 15;
+        char[][] W = new char[15][16];
+        
+        final char[][] rcon = {
+            {0x01, 0x00, 0x00, 0x00},
+            {0x02, 0x00, 0x00, 0x00},
+            {0x04, 0x00, 0x00, 0x00},
+            {0x08, 0x00, 0x00, 0x00},
+            {0x10, 0x00, 0x00, 0x00},
+            {0x20, 0x00, 0x00, 0x00},
+            {0x40, 0x00, 0x00, 0x00}
+        };
+
+        for (int i = 0; i < 4 * R; ++i) {
+
+            if (i < N) {
+                W[i / 4][4 * (i % 4) + 0] = K[4 * i + 0];
+                W[i / 4][4 * (i % 4) + 1] = K[4 * i + 1];
+                W[i / 4][4 * (i % 4) + 2] = K[4 * i + 2];
+                W[i / 4][4 * (i % 4) + 3] = K[4 * i + 3];
+            }
+            else {
+
+                // Get (i - 1)th word
+                int r = (i - 1) / 4;
+                int c = 4 * ((i - 1) % 4);
+                char[] prevWord = operations.bytesToWord(W[r][c + 0], W[r][c + 1], W[r][c + 2], W[r][c + 3]);
+                
+                // Get (i - N)th word
+                r = (i - N) / 4;
+                c = 4 * ((i - N) % 4);
+                char[] prevNWord = operations.bytesToWord(W[r][c + 0], W[r][c + 1], W[r][c + 2], W[r][c + 3]);
+
+                if (i % N == 0) {
+                    
+                    char[] result = operations.xorWords(
+                                        prevNWord, operations.xorWords(
+                                            rcon[i / N - 1], operations.subWord(
+                                                operations.rotWord(prevWord)
+                                    )));
+
+                    operations.wordToBytes(W, result, i);
+                }
+                else if (i % N == 4) {
+
+                    char[] result = operations.xorWords(
+                                        prevNWord, operations.subWord(prevWord)
+                                    );
+                    
+                    operations.wordToBytes(W, result, i);
+                }
+                else {
+                    
+                    char[] result = operations.xorWords(prevWord, prevNWord);
+
+                    operations.wordToBytes(W, result, i);
+                }
+            } 
+        }
+
+        return W;
+    }
 }
