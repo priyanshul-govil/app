@@ -8,7 +8,7 @@ package secur3dit.crypto;
 final class Helpers {
 
     /**
-     * This function performs the SubBytes step on a block of 16 bytes.
+     * This method performs the SubBytes step on a block of 16 bytes.
      * @param state     The state block of AES encryption.
      * @return Nothing  The value of state gets modified.
      */
@@ -20,7 +20,7 @@ final class Helpers {
     }
 
     /**
-     * This function performs the ShiftRows step on a block of 16 bytes.
+     * This method performs the ShiftRows step on a block of 16 bytes.
      * @param state     The state block of AES encryption (char[16]).
      * @return Nothing  The value of state gets modified.
      */
@@ -52,7 +52,7 @@ final class Helpers {
     }
 
     /**
-     * This function performs the MixColumns step on a block of 16 bytes.
+     * This method performs the MixColumns step on a block of 16 bytes.
      * Details at: https://en.wikipedia.org/wiki/Rijndael_MixColumns
      * 
      * Addition is bitwise XOR in GF(2^8)
@@ -79,7 +79,7 @@ final class Helpers {
     }
 
     /**
-     * This function performs the round key addition step of AES.
+     * This method performs the round key addition step of AES.
      * Essentially, it performs bitwiseXOR(Key, State) for all 16 bytes.
      * 
      * @param state     The state block of AES encryption (char[16]).
@@ -94,7 +94,7 @@ final class Helpers {
     }
 
     /**
-     * This function performs the key expansion for AES-256 encryption.
+     * This method performs the key expansion for AES-256 encryption.
      * It gives 15 round keys (14 rounds + 1 initial) from the initial key.
      * 
      * Standard letter notations are used from the algorithm on Wikipedia.
