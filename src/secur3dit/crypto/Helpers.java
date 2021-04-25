@@ -171,10 +171,8 @@ final class Helpers {
         for (int i = 0; i < 4 * R; ++i) {
 
             if (i < N) {
-                W[i / 4][4 * (i % 4) + 0] = K[4 * i + 0];
-                W[i / 4][4 * (i % 4) + 1] = K[4 * i + 1];
-                W[i / 4][4 * (i % 4) + 2] = K[4 * i + 2];
-                W[i / 4][4 * (i % 4) + 3] = K[4 * i + 3];
+                char[] word = operations.bytesToWord(K[4 * i], K[4 * i + 1], K[4 * i + 2], K[4 * i + 3]);
+                operations.wordToBytes(W, word, i);
             }
             else {
 
