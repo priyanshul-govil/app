@@ -50,4 +50,31 @@ final class Helpers {
         state[7] = state[3];
         state[3] = _temp;
     }
+
+    /**
+     * This function performs the MixColumns step on a block of 16 bytes.
+     * Details at: https://en.wikipedia.org/wiki/Rijndael_MixColumns
+     * 
+     * Addition is bitwise XOR in GF(2^8)
+     * Multiplication is done using lookup tables from Constants.java
+     * 
+     * @param state     The state block of AES encryption (char[16]).
+     * @return Nothing  The value of state gets modified.
+     */
+    public static void mixColumns(char[] state) {
+
+        for (int i = 0; i < 4; ++i) {
+
+            char[] s = new char[4];
+            s[0] = state[4 * i];
+            s[1] = state[4 * i + 1];
+            s[2] = state[4 * i + 2];
+            s[3] = state[4 * i + 3];
+
+            state[4 * i + 0] = (char) (Constants.MUL2[s[0]] ^ Constants.MUL3[s[1]] ^ s[2] ^ s[3]);
+            state[4 * i + 1] = (char) (s[0] ^ Constants.MUL2[s[1]] ^ Constants.MUL3[s[2]] ^ s[3]);
+            state[4 * i + 2] = (char) (s[0] ^ s[1] ^ Constants.MUL2[s[2]] ^ Constants.MUL3[s[3]]);
+            state[4 * i + 3] = (char) (Constants.MUL3[s[0]] ^ s[1] ^ s[2] ^ Constants.MUL2[s[3]]);
+        }
+    }
 }
