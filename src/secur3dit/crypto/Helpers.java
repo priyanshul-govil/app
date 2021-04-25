@@ -77,4 +77,19 @@ final class Helpers {
             state[4 * i + 3] = (char) (Constants.MUL3[s[0]] ^ s[1] ^ s[2] ^ Constants.MUL2[s[3]]);
         }
     }
+
+    /**
+     * This function performs the round key addition step of AES.
+     * Essentially, it performs bitwiseXOR(Key, State) for all 16 bytes.
+     * 
+     * @param state     The state block of AES encryption (char[16]).
+     * @param key       The round key with which to mask the state.
+     * @return Nothing  The value of state gets modified.
+     */
+    public static void addRoundKey(char[] state, final char[] key) {
+
+        for (int i = 0; i < state.length; ++i) {
+            state[i] ^= key[i];
+        }
+    }
 }
