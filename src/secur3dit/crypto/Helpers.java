@@ -187,32 +187,26 @@ final class Helpers {
                 char[] prevNWord = operations.bytesToWord(W[r][c + 0], W[r][c + 1], W[r][c + 2], W[r][c + 3]);
 
                 if (i % N == 0) {
-                    
                     char[] result = operations.xorWords(
                                         prevNWord, operations.xorWords(
                                             rcon[i / N - 1], operations.subWord(
                                                 operations.rotWord(prevWord)
                                     )));
-
                     operations.wordToBytes(W, result, i);
                 }
                 else if (i % N == 4) {
-
                     char[] result = operations.xorWords(
                                         prevNWord, operations.subWord(prevWord)
                                     );
-                    
                     operations.wordToBytes(W, result, i);
                 }
                 else {
-                    
                     char[] result = operations.xorWords(prevWord, prevNWord);
-
                     operations.wordToBytes(W, result, i);
                 }
             } 
         }
-
+        
         return W;
     }
 }
