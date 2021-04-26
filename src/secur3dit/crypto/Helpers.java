@@ -109,7 +109,7 @@ final class Helpers {
          * This inner class contains helper functions for keyExpansion.
          * Details at: https://en.wikipedia.org/wiki/AES_key_schedule#The_key_schedule
          */
-        final class keyExpansionHelpers {
+        final class KeyExpansionHelpers {
 
             public char[] bytesToWord(char b0, char b1, char b2, char b3) {
                 return new char[] { b0, b1, b2, b3 };
@@ -152,7 +152,7 @@ final class Helpers {
                 return result;
             }
         }
-        keyExpansionHelpers operations = new keyExpansionHelpers();
+        KeyExpansionHelpers operations = new KeyExpansionHelpers();
         
         int N = 8;
         int R = 15;
