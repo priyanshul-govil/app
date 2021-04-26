@@ -1,10 +1,13 @@
 package secur3dit.crypto;
 
 import java.io.IOException;
+import java.nio.BufferOverflowException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.nio.ReadOnlyBufferException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
 import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -73,8 +76,12 @@ public class AES256CTR {
      * @param nonce     First 128-bit data of type char[16].
      * @param blockNum  Second 128-bit data of type char[16].
      * @return          The output string after performing bitwise-XOR
+     * @throws  ReadOnlyBufferException
+     * @throws  BufferOverflowException
      */
-    private static char[] XOR(char[] nonce, int blockNum) {
+    private static char[] XOR(char[] nonce, int blockNum) throws 
+            ReadOnlyBufferException, BufferOverflowException {
+        
         ByteBuffer bf = ByteBuffer.allocate(nonce.length);
         bf.order(ByteOrder.BIG_ENDIAN);
         bf.putInt(blockNum);
@@ -93,8 +100,15 @@ public class AES256CTR {
      * @param filePath  The path to the file which needs to be encrypted.
      * @return Nothing  The file specified by {@code filePath} gets encrypted.
      * @throws IOException
+     * @throws OutOfMemoryError
+     * @throws SecurityException
+     * @throws InvalidPathException
+     * @throws ReadOnlyBufferException
+     * @throws BufferOverflowException
      */
-    public static void encrypt(AES256CTR ob, String filePath) throws IOException {
+    public static void encrypt(AES256CTR ob, String filePath) throws 
+            IOException, OutOfMemoryError, SecurityException, InvalidPathException,
+            ReadOnlyBufferException, BufferOverflowException {
 
         // Read the file into bytes[], convert into char[]
         byte[] bytes = Files.readAllBytes(Paths.get(filePath));
@@ -126,8 +140,16 @@ public class AES256CTR {
      * @param filePath      The path to the file which needs to be decrypted.
      * @return Nothing      The file specified by {@code filePath} gets decrypted.
      * @throws IOException
+     * @throws OutOfMemoryError
+     * @throws SecurityException
+     * @throws InvalidPathException
+     * @throws ReadOnlyBufferException
+     * @throws BufferOverflowException
      */
-    public static void decryption(AES256CTR ob, String filePath) throws IOException {
+    public static void decryption(AES256CTR ob, String filePath) throws 
+            IOException, OutOfMemoryError, SecurityException, InvalidPathException,
+            ReadOnlyBufferException, BufferOverflowException {
+        
         encrypt(ob, filePath);
     }
 }
