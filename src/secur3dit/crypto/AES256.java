@@ -7,7 +7,7 @@ package secur3dit.crypto;
  */
 final class AES256 {
 
-    private final static int ROUND_COUNT = 14;
+    private static final int ROUND_COUNT = 14;
     
     /**
      * This method performs AES-256 encryption on 16 bytes of data.
