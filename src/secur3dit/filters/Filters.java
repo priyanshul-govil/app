@@ -147,13 +147,13 @@ public final class Filters {
 
     /**
      * Detects edges in an image.
-     * For the math, check [https://en.wikipedia.org/wiki/Sobel_operator]
+     * For the math, check https://en.wikipedia.org/wiki/Sobel_operator
      * @param image The input image
      * @return      An image that has outlined edges in it
      * @throws ArrayIndexOutOfBoundsException
      */
-    public static BufferedImage detectEdges(BufferedImage image) throws 
-                                        ArrayIndexOutOfBoundsException {
+    public static BufferedImage detectEdges(BufferedImage image)
+                            throws ArrayIndexOutOfBoundsException {
 
         int width = image.getWidth();
         int height = image.getHeight();
@@ -180,7 +180,6 @@ public final class Filters {
                 }
 
                 for (int m = 0; m < 3; ++m) {
-
                     for (int n = 0; n < 3; ++n) {
 
                         // Compute indices to operate upon
@@ -190,6 +189,7 @@ public final class Filters {
                         // Check for bounds
                         if (Helpers.isOutOfBounds(indexI, height) || 
                             Helpers.isOutOfBounds(indexJ, width)) {
+                                
                                 continue;
                         }
 
@@ -207,8 +207,10 @@ public final class Filters {
 
                 // Compute the vector sum for each color value
                 for (int k = 0; k < 3; ++k) {
-                    sobelXY[k] = (int) Math.round(Math.sqrt((sobelSumX[k] * sobelSumX[k] + 
-                                                             sobelSumY[k] * sobelSumY[k])));
+
+                    sobelXY[k] = (int) Math.round(Math.sqrt((
+                                        sobelSumX[k] * sobelSumX[k] + sobelSumY[k] * sobelSumY[k])));
+                    
                     sobelXY[k] = Helpers.truncateIfNeeded(sobelXY[k]);
                 }
 
