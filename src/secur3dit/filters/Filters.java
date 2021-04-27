@@ -57,17 +57,17 @@ public final class Filters {
     }
 
     /**
-     * Produces a clipped image rotated by angle degrees,
-     * by treating the image as a rectangle on a cartesian plane 
+     * Produces a clipped image rotated by {@code angle} degrees,
+     * by treating the image as a rectangle on the cartesian plane
      * and using bilinear interpolation to find the pixel value at every co-ordinate that 
      * will not have a black color after rotation. For more information about the math involved,
-     * visit [https://en.wikipedia.org/wiki/Bilinear_interpolation]
+     * visit https://en.wikipedia.org/wiki/Bilinear_interpolation
      * @param image The input image
      * @param angle Floating-point degree, anti-clockwise 
      * @return      The rotated image
      */
-    public static BufferedImage rotate(BufferedImage image, double angle) throws 
-                                                 ArrayIndexOutOfBoundsException {
+    public static BufferedImage rotate(BufferedImage image, double angle)
+                                    throws ArrayIndexOutOfBoundsException {
                                                     
         int width = image.getWidth();
         int height = image.getHeight();
@@ -87,7 +87,6 @@ public final class Filters {
         int centreY = height / 2;
 
         for (int i = 0; i < height; ++i) {
-
             for (int j = 0; j < width; ++j) {
 
                 result.setRGB(j, i, Color.black.getRGB());
@@ -117,10 +116,11 @@ public final class Filters {
                 int[] ceiled = Helpers.ceilPoints(rasterPoints);
                 
                 // Check for bounds
-                if (Helpers.isOutOfBounds(floored[0], width) || 
+                if (Helpers.isOutOfBounds(floored[0], width)  || 
                     Helpers.isOutOfBounds(floored[1], height) || 
-                    Helpers.isOutOfBounds(ceiled[0], width) || 
+                    Helpers.isOutOfBounds(ceiled[0], width)   || 
                     Helpers.isOutOfBounds(ceiled[1], height)) {
+                        
                         continue;
                 }
 
@@ -136,7 +136,7 @@ public final class Filters {
 
                 // Perform bilinear interpolation on these four colors
                 int finalColor = Helpers.bilinearInterpolation(topLeft, topRight, bottomLeft,
-                    bottomRight, deltaX, deltaY);
+                                                                bottomRight, deltaX, deltaY);
                     
                 result.setRGB(j, i, finalColor);
             }
