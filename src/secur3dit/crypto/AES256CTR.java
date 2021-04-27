@@ -25,7 +25,18 @@ public class AES256CTR {
     private final char[] nonce;
 
     /**
-     * This is the only constructor of this class.
+     * WARNING: This constructor is only for testing purposes.
+     * THIS SHOULD NOT BE USED TO IMPLEMENT THE ENCRYPTION
+     * @param key
+     */
+    public AES256CTR(char[] key) {
+        super();
+        this.key = key;
+        this.nonce = new char[] {' '};
+    }
+
+    /**
+     * THIS CONSTRUCTOR SHOULD BE USED FOR ALL ENCRYTPION/DECRYPTION PURPOSES.
      * @param password  The password with which to encrypt the file.    
      * @throws NoSuchAlgorithmException
      */
