@@ -329,21 +329,21 @@ public final class Filters {
     }
 
     /**
-     * Inverts an image
+     * Inverts an image.
      * @param image The input image
      * @return      The negative/inverted image
      * @throws ArrayIndexOutOfBoundsException
      */
-    public static BufferedImage negative(BufferedImage image) throws 
-                                    ArrayIndexOutOfBoundsException {
+    public static BufferedImage negative(BufferedImage image) 
+                            throws ArrayIndexOutOfBoundsException {
+        
         BufferedImage img = Helpers.deepCopy(image);
 
         int width = img.getWidth();
         int height = img.getHeight();
 
-        for (int i = 0; i < width; i++) {
-
-            for (int j = 0; j < height; j++) {
+        for (int i = 0; i < width; ++i) {
+            for (int j = 0; j < height; ++j) {
 
                 Color color = new Color(img.getRGB(i, j));
 
@@ -355,8 +355,8 @@ public final class Filters {
                 img.setRGB(i, j, newColor.getRGB());
             }
         }
-        return img;
 
+        return img;
     }
 
     /**
