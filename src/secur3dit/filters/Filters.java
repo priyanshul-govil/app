@@ -1,6 +1,8 @@
 /**
  * Filters.java 
  * Contains various filters that would be used by the main desktop application.
+ * @author Vivek Nathani
+ * @author Naman Nihal
  */
 
 package secur3dit.filters;
@@ -13,15 +15,30 @@ import java.awt.Graphics2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 
+
 public class Filters {
-    public static BufferedImage mirror(BufferedImage image, boolean vertical) {
+
+    /**
+     * Mirror an image, works in O(height * width)
+     * @param image     The input image
+     * @param vertical  A boolean variable which is true if image is to be mirrored vertically
+     * @return          The mirrored image
+     * @throws ArrayIndexOutOfBoundsException
+     */
+    public static BufferedImage mirror(BufferedImage image, boolean vertical) throws 
+                                                    ArrayIndexOutOfBoundsException {
+
+        // Make a new object in memory
         BufferedImage result = Helpers.deepCopy(image);
         int height = result.getHeight();
         int width = result.getWidth();
 
         if (vertical) {
             for (int i = 0; i < height; ++i) {
+
                 for (int j = 0; j < width / 2; ++j) {
+
+                    // Swap pixel at (j, i) position with pixel at (width - j - 1, i) position
                     int temp = result.getRGB(j, i);
                     result.setRGB(j, i, result.getRGB(width - j - 1, i));
                     result.setRGB(width - j - 1, i, temp);
@@ -30,25 +47,33 @@ public class Filters {
         } 
         else {
             for (int j = 0; j < width; ++j) {
+
                 for (int i = 0; i < height / 2; ++i) {
+
+                    // Swap pixel at (j, i) position with pixel at (j, height - i - 1) position
                     int temp = result.getRGB(j, i);
                     result.setRGB(j, i, result.getRGB(j, height - i - 1));
                     result.setRGB(j, height - i - 1, temp);
                 }
             }
         }
+
         return result;
     }
 
     /**
-     * @param angle: floating-point degree, anti-clockwise 
      * Produces a clipped image rotated by angle degrees,
      * by treating the image as a rectangle on a cartesian plane 
      * and using bilinear interpolation to find the pixel value at every co-ordinate that 
      * will not have a black color after rotation. For more information about the math involved,
      * visit [https://en.wikipedia.org/wiki/Bilinear_interpolation]
+     * @param image The input image
+     * @param angle Floating-point degree, anti-clockwise 
+     * @return      The rotated image
      */
-    public static BufferedImage rotate(BufferedImage image, double angle) {
+    public static BufferedImage rotate(BufferedImage image, double angle) throws 
+                                                 ArrayIndexOutOfBoundsException {
+                                                    
         int width = image.getWidth();
         int height = image.getHeight();
         int imageType = BufferedImage.TYPE_INT_RGB;
@@ -59,25 +84,44 @@ public class Filters {
 
         BufferedImage result = new BufferedImage(width, height, imageType);
 
+        // Convert angle from degree to radians
         angle = Helpers.toRadians(angle);
+
+        // Get centre co-ordinates
         int centreX = width / 2;
         int centreY = height / 2;
 
         for (int i = 0; i < height; ++i) {
+
             for (int j = 0; j < width; ++j) {
+
                 result.setRGB(j, i, Color.black.getRGB());
+
+                // Raster to cartesian
                 int[] points = Helpers.toCartesian(j, i, centreX, centreY);
+
+                // Continue if point is the origin
                 if (points[0] == 0 && points[1] == 0) {
                     continue;
                 }
 
+                // Cartesian to polar form
                 double[] polarData = Helpers.toPolar(points[0], points[1]);
+
+                // Subtract the angle from the polar angle
                 polarData[1] -= angle;
+
+                // Use the new polar angle to make new cartesian points
                 double[] cartesianPoints = Helpers.toCartesian(polarData);
+                
+                // Use the new cartesian points to make new raster points
                 double[] rasterPoints = Helpers.toRaster(cartesianPoints, centreX, centreY);
+
+
                 int[] floored = Helpers.floorPoints(rasterPoints);
                 int[] ceiled = Helpers.ceilPoints(rasterPoints);
                 
+                // Check for bounds
                 if (Helpers.outOfBounds(floored[0], width) || 
                     Helpers.outOfBounds(floored[1], height) || 
                     Helpers.outOfBounds(ceiled[0], width) || 
@@ -85,24 +129,37 @@ public class Filters {
                         continue;
                 }
 
+                // Compute the delta
                 double deltaX = rasterPoints[0] - (double) floored[0];
                 double deltaY = rasterPoints[1] - (double) floored[1];
+
+                // Use the floored and ceiled points to get four colors
                 Color topLeft = new Color(image.getRGB(floored[0], floored[1]));
                 Color topRight = new Color(image.getRGB(ceiled[0], floored[1]));
                 Color bottomLeft = new Color(image.getRGB(floored[0], ceiled[1]));
                 Color bottomRight = new Color(image.getRGB(ceiled[0], ceiled[1]));
+
+                // Perform bilinear interpolation on these four colors
                 int finalColor = Helpers.bilinearInterpolation(topLeft, topRight, bottomLeft,
                     bottomRight, deltaX, deltaY);
+                    
                 result.setRGB(j, i, finalColor);
             }
         }
+
         return result;
     }
 
     /**
+     * Detects edges in an image.
      * For the math, check [https://en.wikipedia.org/wiki/Sobel_operator]
+     * @param image The input image
+     * @return      An image that has outlined edges in it
+     * @throws ArrayIndexOutOfBoundsException
      */
-    public static BufferedImage detectEdges(BufferedImage image) {
+    public static BufferedImage detectEdges(BufferedImage image) throws 
+                                        ArrayIndexOutOfBoundsException {
+
         int width = image.getWidth();
         int height = image.getHeight();
         int imageType = BufferedImage.TYPE_INT_RGB;
@@ -113,22 +170,29 @@ public class Filters {
 
         BufferedImage result = new BufferedImage(width, height, imageType);
 
-        int[] sobelSumX = new int[3];
-        int[] sobelSumY = new int[3];
-        int[] sobelXY = new int[3];
-
         for (int i = 0; i < height; ++i) {
+
+            int[] sobelSumX = new int[3];
+            int[] sobelSumY = new int[3];
+            int[] sobelXY = new int[3];
+
             for (int j = 0; j < width; ++j) {
+
+                // Set initial values to zero
                 for (int k = 0; k < 3; ++k) {
                     sobelSumX[k] = 0;
                     sobelSumY[k] = 0;
                 }
 
                 for (int m = 0; m < 3; ++m) {
+
                     for (int n = 0; n < 3; ++n) {
+
+                        // Compute indices to operate upon
                         int indexI = i + m - 1;
                         int indexJ = j + n - 1;
 
+                        // Check for bounds
                         if (Helpers.outOfBounds(indexI, height) || 
                             Helpers.outOfBounds(indexJ, width)) {
                                 continue;
@@ -136,47 +200,79 @@ public class Filters {
 
                         Color color = new Color(image.getRGB(indexJ, indexI));
 
-                        sobelSumX[0] += Helpers.sobelKernelX[m][n] * color.getRed();
-                        sobelSumX[1] += Helpers.sobelKernelX[m][n] * color.getGreen();
-                        sobelSumX[2] += Helpers.sobelKernelX[m][n] * color.getBlue();
-                        sobelSumY[0] += Helpers.sobelKernelX[m][n] * color.getRed();
-                        sobelSumY[1] += Helpers.sobelKernelX[m][n] * color.getGreen();
-                        sobelSumY[2] += Helpers.sobelKernelX[m][n] * color.getBlue();
+                        // Add the R,G,B values in X and Y direction
+                        sobelSumX[0] += Kernels.sobelKernelX[m][n] * color.getRed();
+                        sobelSumX[1] += Kernels.sobelKernelX[m][n] * color.getGreen();
+                        sobelSumX[2] += Kernels.sobelKernelX[m][n] * color.getBlue();
+                        sobelSumY[0] += Kernels.sobelKernelX[m][n] * color.getRed();
+                        sobelSumY[1] += Kernels.sobelKernelX[m][n] * color.getGreen();
+                        sobelSumY[2] += Kernels.sobelKernelX[m][n] * color.getBlue();
                     }
                 }
 
+                // Compute the vector sum for each color value
                 for (int k = 0; k < 3; ++k) {
                     sobelXY[k] = (int) Math.round(Math.sqrt((sobelSumX[k] * sobelSumX[k] + 
                                                              sobelSumY[k] * sobelSumY[k])));
                     sobelXY[k] = Helpers.truncateIfNeeded(sobelXY[k]);
                 }
 
+                // Get the final color
                 Color color = new Color(sobelXY[0], sobelXY[1], sobelXY[2]);
                 result.setRGB(j, i, color.getRGB());
             }
         }
+
         return result;
     }
 
+    /**
+     * Brightens an image.
+     * @param image The input image
+     * @param dial  A dial which can take postive values upto 1.0
+     * @return      The brightened image
+     */
     public static BufferedImage brighten(BufferedImage image, double dial) {
-        if (dial < 0.0) {
+
+        // Return null for an incorrect dial value
+        if (dial < 0.0 || dial > 1.0) {
             return null;
         }
+
         BufferedImage result = Helpers.deepCopy(image);
         Helpers.lightDial(result, dial);
+
         return result;
     }
 
+    /**
+     * Darkens an image.
+     * @param image The input image
+     * @param dial  A dial which can take negative values, -1.0 being the lowest.
+     * @return      The darkened image
+     */
     public static BufferedImage darken(BufferedImage image, double dial) {
-        if (dial > 0.0) {
+
+        // Return null for an incorrect dial value
+        if (dial > 0.0 || dial < -1.0) {
             return null;
         }
+
         BufferedImage result = Helpers.deepCopy(image);
         Helpers.lightDial(result, dial);
+
         return result;
     }
 
-    public static BufferedImage grayscale(BufferedImage image) {
+    /**
+     * Takes an image and makes it grayscale
+     * @param image The input image
+     * @return      The grayscaled image
+     * @throws ArrayIndexOutOfBoundsException
+     */
+    public static BufferedImage grayscale(BufferedImage image) throws 
+                                    ArrayIndexOutOfBoundsException {
+
         BufferedImage img = Helpers.deepCopy(image);
 
         int width = img.getWidth();
@@ -185,6 +281,7 @@ public class Filters {
         for (int i = 0; i < width; i++) {
 
             for (int j = 0; j < height; j++) {
+
                 Color color = new Color(img.getRGB(i, j));
 
                 int tr = (int) (color.getRed() * 0.2126);
@@ -199,7 +296,15 @@ public class Filters {
         return img;
     }
 
-    public static BufferedImage sepia(BufferedImage image) {
+    /**
+     * Apply the sepia effect
+     * @param image The input image
+     * @return      The image with the sepia effect
+     * @throws ArrayIndexOutOfBoundsException
+     */
+    public static BufferedImage sepia(BufferedImage image) throws 
+                                    ArrayIndexOutOfBoundsException {
+
         BufferedImage img = Helpers.deepCopy(image);
 
         int width = img.getWidth();
@@ -208,6 +313,7 @@ public class Filters {
         for (int i = 0; i < width; i++) {
 
             for (int j = 0; j < height; j++) {
+
                 Color color = new Color(img.getRGB(i, j));
 
                 int tr = (int) (color.getRed() * 0.393 + color.getGreen() * 0.769 + color.getBlue() * 0.189);
@@ -222,11 +328,18 @@ public class Filters {
                 img.setRGB(i, j, newColor.getRGB());
             }
         }
-        return img;
 
+        return img;
     }
 
-    public static BufferedImage negative(BufferedImage image) {
+    /**
+     * Inverts an image
+     * @param image The input image
+     * @return      The negative/inverted image
+     * @throws ArrayIndexOutOfBoundsException
+     */
+    public static BufferedImage negative(BufferedImage image) throws 
+                                    ArrayIndexOutOfBoundsException {
         BufferedImage img = Helpers.deepCopy(image);
 
         int width = img.getWidth();
@@ -235,6 +348,7 @@ public class Filters {
         for (int i = 0; i < width; i++) {
 
             for (int j = 0; j < height; j++) {
+
                 Color color = new Color(img.getRGB(i, j));
 
                 int tr = (int) (255 - color.getRed());
@@ -249,7 +363,15 @@ public class Filters {
 
     }
 
-    public static BufferedImage addWatermark(BufferedImage image, String watermarkText) {
+    /**
+     * Add a watermark to an image
+     * @param image         The input image
+     * @param watermarkText A string that contains the watermark content
+     * @return              Image with the applied watermark
+     * @throws NullPointerException
+     */
+    public static BufferedImage addWatermark(BufferedImage image, String watermarkText) throws 
+                                                                        NullPointerException {
         
         BufferedImage img = Helpers.deepCopy(image);
         Graphics2D graphics = (Graphics2D) img.getGraphics();
@@ -272,17 +394,31 @@ public class Filters {
         return img;
     }
 
-    static void boxBlur(BufferedImage source, BufferedImage target, int kernelRadius) {
+    /**
+     * Apply box blur on an image, in O(height * width)
+     * @param source        The input image
+     * @param target        The image that will store the result of boxBlur
+     * @param kernelRadius  An integer value in the range, [1, min(source.height - 1, source.width - 1)]
+     * @throws ArrayIndexOutOfBoundsException
+     */
+    static void boxBlur(BufferedImage source, BufferedImage target, int kernelRadius) throws 
+                                                            ArrayIndexOutOfBoundsException {
+
+        if (kernelRadius < 0 || kernelRadius >= Math.min(source.getHeight(), source.getWidth())) {
+            return;
+        }
+
         int width = source.getWidth();
         int height = source.getHeight();
-
+                                                                
         double kernelCoefficient = 1.0 / ((2.0 * (double)kernelRadius) + 1.0);
-        // go through each row first, on the source itself
+
+        // Go through each row first, on the source itself
         for (int i = 0; i < height; ++i) {
             
             Color fcolor = new Color(target.getRGB(0, i));
             Color lastColor = new Color(target.getRGB(width - 1, i));
-            int sumR =  fcolor.getRed() * (kernelRadius + 1);
+            int sumR = fcolor.getRed() * (kernelRadius + 1);
             int sumG = fcolor.getGreen() * (kernelRadius + 1);
             int sumB = fcolor.getBlue() * (kernelRadius + 1);
 
@@ -292,10 +428,13 @@ public class Filters {
                 sumG += color.getGreen();
                 sumB += color.getBlue();
             }            
+
             int ti = 0;
             int li = ti;
             int ri = ti + kernelRadius;
+
             for (int j = 0; j <= kernelRadius; ++j) {
+
                 Color color = new Color(target.getRGB(ri, i));
                 sumR += (color.getRed() - fcolor.getRed());
                 sumG += (color.getGreen() - fcolor.getGreen());
@@ -310,6 +449,7 @@ public class Filters {
             }
 
             for (int j = kernelRadius + 1; j < width - kernelRadius; ++j) {
+
                 Color color = new Color(target.getRGB(ri, i));
                 Color lcolor = new Color(target.getRGB(li, i));
                 ++li;
@@ -326,6 +466,7 @@ public class Filters {
             }
 
             for (int j = width - kernelRadius; j < width; ++j) {
+
                 Color lcolor = new Color(target.getRGB(li, i));
                 ++li;
                 sumR += (lastColor.getRed() - lcolor.getRed());
@@ -341,6 +482,7 @@ public class Filters {
             }
         }
 
+        // Go through each column, on the target
         for (int i = 0; i < width; ++i) {
             Color fcolor = new Color(source.getRGB(i, 0));
             Color lastColor = new Color(source.getRGB(i, height - 1));
@@ -404,12 +546,27 @@ public class Filters {
         }
     }
 
+    /**
+     * Uses box blur to achieve the effect of gaussian blur
+     * @param image     The input image
+     * @param intensity Integer in the range [1, min(image.height - 1, image.width - 1)]
+     * @return          The blurred image
+     */
     public static BufferedImage gaussianBlur(BufferedImage image, int intensity) {
+
+        // Incorrect value of intensity
+        if (intensity < 0 || intensity >= Math.min(image.getWidth(), image.getHeight())) {
+            return null;
+        }
+
         BufferedImage source = Helpers.deepCopy(image);
         BufferedImage target = Helpers.deepCopy(image);
+
+        // Apply box blur 3 times, incrementally
         boxBlur(source, target, intensity);
         boxBlur(target, source, intensity + 1);
-        boxBlur(source, target, intensity + 1);
+        boxBlur(source, target, intensity + 2);
+
         return target;
     }
 
@@ -418,15 +575,21 @@ public class Filters {
      * Posterization achieves this by reducing the distinct pixels in 
      * an image. We apply the Helpers.reducePixel() method on R,G,B 
      * value of every pixel. 
+     * @param image The input image
+     * @return      The posterized image
+     * @throws ArrayIndexOutOfBoundsException
      */
-    public static BufferedImage posterize(BufferedImage image) {
+    public static BufferedImage posterize(BufferedImage image) throws 
+                                    ArrayIndexOutOfBoundsException {
         
         BufferedImage result = Helpers.deepCopy(image);
         int width = image.getWidth();
         int height = image.getHeight();
     
         for (int i = 0; i < height; ++i) {
+
             for (int j = 0; j < width; ++j) {
+
                 // get the color
                 Color originalColor = new Color(result.getRGB(j, i));
 
@@ -446,19 +609,23 @@ public class Filters {
     
     /**
      * Takes an image and returns a pixelated version of it.
-     * It needs an extra parameter, pixelWidth which can take values
-     * in the range [1, min(height - 1, width - 1)]. A square window of side
-     * length pixelWidth slides through the image, jumping at a length of 
-     * pixelWidth after each iteration. In each slide, it sets the R,G,B values 
-     * of every pixel to the average values in that window.
+     * A square window of side length pixelWidth slides through the image,
+     * jumping at a length of pixelWidth after each iteration. In each slide, 
+     * it sets the R,G,B values of every pixel to the average values in that window.
+     * @param image         The input image
+     * @param pixelWidth    An integer in the range [1, min(height - 1, width - 1)]
+     * @return              The pixelated image
+     * @throws ArrayIndexOutOfBoundsException
      */
-    public static BufferedImage pixelate(BufferedImage image, int pixelWidth) {
+    public static BufferedImage pixelate(BufferedImage image, int pixelWidth) throws 
+                                                    ArrayIndexOutOfBoundsException {
         
         BufferedImage result = Helpers.deepCopy(image);
         int width = image.getWidth();
         int height = image.getHeight();
 
         for (int i = 0; i < height; i += pixelWidth) {
+
             for (int j = 0; j < width; j += pixelWidth) {
 
                 int avgRed = 0;
@@ -473,7 +640,9 @@ public class Filters {
 
                 // Traverse and add the pixel values
                 for (int y = i; y < i + pixelWidth && y < height; ++y) {
+
                     for (int x = j; x < j + pixelWidth && x < width; ++x) {
+
                         Color color = new Color(result.getRGB(x, y));
 
                         totalRed += color.getRed();
@@ -493,7 +662,9 @@ public class Filters {
 
                 // Set all pixels in the submatrix to finalColor
                 for (int y = i; y < i + pixelWidth && y < height; ++y) {
+
                     for (int x = j; x < j + pixelWidth && x < width; ++x) {
+
                         result.setRGB(x, y, finalColor.getRGB());
                     }
                 }
@@ -515,6 +686,10 @@ public class Filters {
      * [0, infinity). However, in practice, after a threshold, the higher values 
      * would become pointless to use due to results that would not please the
      * human eye. That threshold would depend upon how blurred the input image is.
+     * 
+     * @param image     The input image
+     * @param intensity Integer indicating how sharpened the result should be
+     * @return          The sharpened image
      */
     public static BufferedImage sharpen(BufferedImage image, int intensity) {
 
@@ -523,7 +698,7 @@ public class Filters {
         int height = image.getHeight();
 
         // Get the kernel with applied intensity
-        int[][] kernel = Helpers.getSharpenKernel(intensity);
+        int[][] kernel = Kernels.getSharpenKernel(intensity);
 
         for (int i = 1; i < height - 1; ++i) {
             for (int j = 1; j < width - 1; ++j) {
