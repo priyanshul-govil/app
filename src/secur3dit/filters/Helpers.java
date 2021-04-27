@@ -20,10 +20,7 @@ import java.lang.IllegalArgumentException;
 final class Helpers {
 
     /**
-     * We need to apply filters to a new object in memory.
-     * Using the assignment operator leads to a shallow copy,
-     * which creates the need for implementing a method that performs
-     * a deep copy.
+     * Makes a deep copy of the input image to which filters are applied.
      * @param image The input image
      * @return      A new instance of BufferedImage, which is made using the input
      * @throws RasterFormatException
@@ -96,8 +93,8 @@ final class Helpers {
 
     /**
      * Takes polarData and returns the cartesian X and cartesian Y value
-     * @param polarData An array of size 2 where first value is the distance of the point from 
-     *                  origin and the second value is the polar angle
+     * @param polarData An array double[2] where first value is the distance of the point
+     *                  from origin and the second value is the polar angle
      * @return An array [cartesianX, cartesianY]
      */
     static double[] toCartesian(double[] polarData) {
@@ -126,9 +123,9 @@ final class Helpers {
     }
 
     /**
-     * Take the raster points of type double and return floored values
-     * @param rasterPoints An array of type double [rasterX, rasterY]
-     * @return             An array of type int [rasterX, rasterY] 
+     * Take the raster points of type double[] and returns the floored values
+     * @param rasterPoints An array of type double {rasterX, rasterY}
+     * @return             An array of type int {rasterX, rasterY}
      */
     static int[] floorPoints(double[] rasterPoints) {
 
@@ -140,9 +137,9 @@ final class Helpers {
     }
 
     /**
-     * Take the raster points of type double and return ceiled values
-     * @param rasterPoints An array of type double [rasterX, rasterY]
-     * @return             An array of type int [rasterX, rasterY] 
+     * Take the raster points of type double[] and returns the ceiled values
+     * @param rasterPoints An array of type double {rasterX, rasterY}
+     * @return             An array of type int {rasterX, rasterY}
      */
     static int[] ceilPoints(double[] rasterPoints) {
 
@@ -154,10 +151,10 @@ final class Helpers {
     }
 
     /**
-     * Check if a given index if out of bounds w.r.t. the given array's length
+     * Check if a given index is out of bounds w.r.t. the given array's length
      * @param givenIndex  
      * @param length
-     * @return      true if given index is out of bounds
+     * @return      {@code True} if given index is out of bounds
      */
     static boolean outOfBounds(int givenIndex, int length) {
 
@@ -165,7 +162,7 @@ final class Helpers {
     }
 
     /**
-     * Linear interpolation, f(t) = (1 - t) * p1 + (t * p2)
+     * Linear interpolation, {@code f(t) = (1 - t) * p1 + (t * p2)}
      * where p1 and p2 are two points in-between which we need to
      * find a new point which is at 't' times the distance between p1 and p2
      * @param left  Any point
@@ -284,13 +281,8 @@ final class Helpers {
     }
 
     /**
-     * Takes a pixel value and reduces it
-     * to one of the 4 distinct values. If
-     * the value is invalid, the method returns 
-     * 255. The rules for deciding the values and 
-     * the number of distinct values can vary depending
-     * upon implementation. The idea here is to reduce 
-     * the number of distinct colors used in an image. 
+     * Takes a pixel value and reduces it to one of the 4 distinct values.
+     * If the value is invalid, the method returns {@code 255}.
      * @param pixel A pixel value
      * @return      A reduced pixel value
      */
