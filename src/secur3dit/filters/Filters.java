@@ -575,23 +575,22 @@ public final class Filters {
     }
 
     /**
-     * Takes an image and returns a posterized version of it. 
-     * Posterization achieves this by reducing the distinct pixels in 
-     * an image. We apply the Helpers.reducePixel() method on R,G,B 
-     * value of every pixel. 
+     * Takes an image and returns a posterized version of it by reducing 
+     * its distinct pixels.  
      * @param image The input image
      * @return      The posterized image
      * @throws ArrayIndexOutOfBoundsException
      */
-    public static BufferedImage posterize(BufferedImage image) throws 
-                                    ArrayIndexOutOfBoundsException {
+    public static BufferedImage posterize(BufferedImage image) 
+                            throws ArrayIndexOutOfBoundsException {
         
+        // We apply the Helpers.reducePixel() method on R,G,B value of every pixel.
+
         BufferedImage result = Helpers.deepCopy(image);
         int width = image.getWidth();
         int height = image.getHeight();
     
         for (int i = 0; i < height; ++i) {
-
             for (int j = 0; j < width; ++j) {
 
                 // get the color
