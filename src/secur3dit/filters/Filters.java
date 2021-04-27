@@ -10,20 +10,20 @@ import java.awt.image.BufferedImage;
 
 /**
  * Contains methods to apply filters on images.
- * @author Vivek Nathani
  * @author Naman Nihal
+ * @author Vivek Nathani
  */
-public class Filters {
+public final class Filters {
 
     /**
-     * Mirror an image, works in O(height * width)
+     * Mirrors an image, works in {@code O(height * width)}
      * @param image     The input image
      * @param vertical  A boolean variable which is true if image is to be mirrored vertically
      * @return          The mirrored image
      * @throws ArrayIndexOutOfBoundsException
      */
-    public static BufferedImage mirror(BufferedImage image, boolean vertical) throws 
-                                                    ArrayIndexOutOfBoundsException {
+    public static BufferedImage mirror(BufferedImage image, boolean vertical)
+                                        throws ArrayIndexOutOfBoundsException {
 
         // Make a new object in memory
         BufferedImage result = Helpers.deepCopy(image);
@@ -32,7 +32,6 @@ public class Filters {
 
         if (vertical) {
             for (int i = 0; i < height; ++i) {
-
                 for (int j = 0; j < width / 2; ++j) {
 
                     // Swap pixel at (j, i) position with pixel at (width - j - 1, i) position
@@ -44,7 +43,6 @@ public class Filters {
         } 
         else {
             for (int j = 0; j < width; ++j) {
-
                 for (int i = 0; i < height / 2; ++i) {
 
                     // Swap pixel at (j, i) position with pixel at (j, height - i - 1) position
