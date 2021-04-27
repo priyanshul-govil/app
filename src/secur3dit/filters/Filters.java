@@ -15,7 +15,11 @@ import java.awt.Graphics2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 
-
+/**
+ * Contains methods to apply filters on images.
+ * @author Vivek Nathani
+ * @author Naman Nihal
+ */
 public class Filters {
 
     /**

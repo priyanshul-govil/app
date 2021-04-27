@@ -13,6 +13,10 @@ import java.awt.image.WritableRaster;
 import java.awt.image.RasterFormatException;
 import java.lang.IllegalArgumentException;
 
+/** 
+ * Contains utility methods used by {@code Filters.java}
+ * @author Vivek Nathani
+ */
 final class Helpers {
 
     /**

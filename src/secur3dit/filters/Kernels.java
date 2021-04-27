@@ -1,6 +1,7 @@
+package secur3dit.filters;
+
 /**
- * Kernels.java
- * Contains various kernels used by Filters.java
+ * Contains various kernels used by {@code Filters.java}
  * @author Vivek Nathani
  */
 
