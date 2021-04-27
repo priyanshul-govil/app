@@ -360,14 +360,14 @@ public final class Filters {
     }
 
     /**
-     * Add a watermark to an image
+     * Add a watermark to an image.
      * @param image         The input image
      * @param watermarkText A string that contains the watermark content
      * @return              Image with the applied watermark
      * @throws NullPointerException
      */
-    public static BufferedImage addWatermark(BufferedImage image, String watermarkText) throws 
-                                                                        NullPointerException {
+    public static BufferedImage addWatermark(BufferedImage image, String watermarkText)
+                                                                throws NullPointerException {
         
         BufferedImage img = Helpers.deepCopy(image);
         Graphics2D graphics = (Graphics2D) img.getGraphics();
