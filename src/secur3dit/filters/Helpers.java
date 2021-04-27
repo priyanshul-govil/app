@@ -225,9 +225,9 @@ final class Helpers {
         double bottomB = linearInterpolation(bottomLeft.getBlue(), deltaX, bottomRight.getBlue());
 
         // Compute the R, G, B values
-        int red = (int)Math.round(linearInterpolation(topR, deltaY, bottomR));
-        int green = (int)Math.round(linearInterpolation(topG, deltaY, bottomG));
-        int blue = (int)Math.round(linearInterpolation(topB, deltaY, bottomB));
+        int red = (int) Math.round(linearInterpolation(topR, deltaY, bottomR));
+        int green = (int) Math.round(linearInterpolation(topG, deltaY, bottomG));
+        int blue = (int) Math.round(linearInterpolation(topB, deltaY, bottomB));
 
 
         red = truncateIfNeeded(red);
@@ -263,15 +263,15 @@ final class Helpers {
                 int newB = 0;
 
                 if (dial > 0.0) {
-                    newR = (int)linearInterpolation(color.getRed(), dial, limit);
-                    newG = (int)linearInterpolation(color.getGreen(), dial, limit);
-                    newB = (int)linearInterpolation(color.getBlue(), dial, limit);
+                    newR = (int) linearInterpolation(color.getRed(), dial, limit);
+                    newG = (int) linearInterpolation(color.getGreen(), dial, limit);
+                    newB = (int) linearInterpolation(color.getBlue(), dial, limit);
                 }            
                 else {
                     dial = -1.0 * dial;
-                    newR = (int)linearInterpolation(limit, dial, color.getRed());
-                    newG = (int)linearInterpolation(limit, dial, color.getGreen());
-                    newB = (int)linearInterpolation(limit, dial, color.getBlue());
+                    newR = (int) linearInterpolation(limit, dial, color.getRed());
+                    newG = (int) linearInterpolation(limit, dial, color.getGreen());
+                    newB = (int) linearInterpolation(limit, dial, color.getBlue());
                 }    
 
                 Color newColor = new Color(newR, newG, newB);
