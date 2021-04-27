@@ -12,7 +12,7 @@ final class Helpers {
      * @param state     The state block of AES encryption.
      * @return Nothing  The value of state gets modified.
      */
-    public static void subBytes(char[] state) {
+    static void subBytes(char[] state) {
 
         for (int i = 0; i < state.length; ++i) {
             state[i] = Constants.SBOX[state[i]];
@@ -24,7 +24,7 @@ final class Helpers {
      * @param state     The state block of AES encryption (char[16]).
      * @return Nothing  The value of state gets modified.
      */
-    public static void shiftRows(char[] state) {
+    static void shiftRows(char[] state) {
 
         // Row0 <<< 0
 
@@ -61,7 +61,7 @@ final class Helpers {
      * @param state     The state block of AES encryption (char[16]).
      * @return Nothing  The value of state gets modified.
      */
-    public static void mixColumns(char[] state) {
+    static void mixColumns(char[] state) {
 
         for (int i = 0; i < 4; ++i) {
 
@@ -86,7 +86,7 @@ final class Helpers {
      * @param key       The round key with which to mask the state.
      * @return Nothing  The value of state gets modified.
      */
-    public static void addRoundKey(char[] state, final char[] key) {
+    static void addRoundKey(char[] state, final char[] key) {
 
         for (int i = 0; i < state.length; ++i) {
             state[i] ^= key[i];
@@ -103,7 +103,7 @@ final class Helpers {
      * @param K     The initial key (char[32]) to be expanded into round keys.
      * @return W    The final 15 round keys.
      */
-    public static char[][] keyExpansion(char[] K) {
+    static char[][] keyExpansion(char[] K) {
 
         /**
          * This inner class contains helper functions for keyExpansion.
