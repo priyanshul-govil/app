@@ -76,6 +76,7 @@ final class Helpers {
 
         double data[] = new double[2];
         data[0] = Math.sqrt((cartesianX * cartesianX) + (cartesianY * cartesianY));
+
         if (cartesianX == 0) {
             if (cartesianY < 0) {
                 data[1] = 1.5 * Math.PI;
@@ -85,7 +86,7 @@ final class Helpers {
             }
         }
         else {
-            data[1] = Math.atan2((double)cartesianY, (double)cartesianX);
+            data[1] = Math.atan2((double) cartesianY, (double) cartesianX);
         }
 
         return data;
@@ -234,9 +235,7 @@ final class Helpers {
         green = truncateIfNeeded(green);
         blue = truncateIfNeeded(blue);
 
-        Color finalColor = new Color(red, green, blue);
-
-        return finalColor.getRGB();
+        return new Color(red, green, blue).getRGB();
     }
 
     /**
