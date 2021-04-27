@@ -550,9 +550,10 @@ public final class Filters {
     }
 
     /**
-     * Uses box blur to achieve the effect of gaussian blur
+     * Uses box blur to achieve the effect of gaussian blur.
      * @param image     The input image
-     * @param intensity Integer in the range [1, min(image.height - 1, image.width - 1)]
+     * @param intensity Integer in the range
+     *                  [1, min({@code image.height} - 1, {@code image.width} - 1)]
      * @return          The blurred image
      */
     public static BufferedImage gaussianBlur(BufferedImage image, int intensity) {
