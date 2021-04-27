@@ -13,20 +13,21 @@ import java.awt.image.WritableRaster;
 import java.awt.image.RasterFormatException;
 import java.lang.IllegalArgumentException;
 
+/** 
+ * Contains utility methods used by {@code Filters.java}
+ * @author Vivek Nathani
+ */
 final class Helpers {
 
     /**
-     * We need to apply filters to a new object in memory.
-     * Using the assignment operator leads to a shallow copy,
-     * which creates the need for implementing a method that performs
-     * a deep copy.
+     * Makes a deep copy of the input image to which filters are applied.
      * @param image The input image
      * @return      A new instance of BufferedImage, which is made using the input
      * @throws RasterFormatException
      * @throws IllegalArgumentException
      */
-    static BufferedImage deepCopy(BufferedImage image) throws RasterFormatException, 
-                                                        IllegalArgumentException {
+    public static BufferedImage deepCopy(BufferedImage image) 
+            throws RasterFormatException, IllegalArgumentException {
 
         ColorModel cm = image.getColorModel();
         boolean isAlphaPremultiplied = cm.isAlphaPremultiplied();
@@ -40,7 +41,7 @@ final class Helpers {
      * @param degreeAngle An angle in degrees
      * @return            The angle in radians  
      */
-    static double toRadians(double degreeAngle) {
+    public static double toRadians(double degreeAngle) {
 
         double result = (degreeAngle * Math.PI) / 180.0;
         return result;
@@ -55,7 +56,7 @@ final class Helpers {
      * @return          An array of size 2 where first value is the cartesian X co-ordinate and 
      *                  second value is the cartesian Y co-ordinate
      */
-    static int[] toCartesian(int rasterX, int rasterY, int centreX, int centreY) {
+    public static int[] toCartesian(int rasterX, int rasterY, int centreX, int centreY) {
 
         int points[] = new int[2];
         points[0] = rasterX - centreX;
@@ -71,10 +72,11 @@ final class Helpers {
      * @return An array of size 2 where first value is the distance of the point from origin
      *         and second value is the polar angle 
      */
-    static double[] toPolar(int cartesianX, int cartesianY) {
+    public static double[] toPolar(int cartesianX, int cartesianY) {
 
         double data[] = new double[2];
         data[0] = Math.sqrt((cartesianX * cartesianX) + (cartesianY * cartesianY));
+
         if (cartesianX == 0) {
             if (cartesianY < 0) {
                 data[1] = 1.5 * Math.PI;
@@ -84,7 +86,7 @@ final class Helpers {
             }
         }
         else {
-            data[1] = Math.atan2((double)cartesianY, (double)cartesianX);
+            data[1] = Math.atan2((double) cartesianY, (double) cartesianX);
         }
 
         return data;
@@ -92,11 +94,11 @@ final class Helpers {
 
     /**
      * Takes polarData and returns the cartesian X and cartesian Y value
-     * @param polarData An array of size 2 where first value is the distance of the point from 
-     *                  origin and the second value is the polar angle
+     * @param polarData An array double[2] where first value is the distance of the point
+     *                  from origin and the second value is the polar angle
      * @return An array [cartesianX, cartesianY]
      */
-    static double[] toCartesian(double[] polarData) {
+    public static double[] toCartesian(double[] polarData) {
 
         double[] points = new double[2];
         points[0] = polarData[0] * Math.cos(polarData[1]);
@@ -112,7 +114,7 @@ final class Helpers {
      * @param centreY         y co-ordinate of the given raster plane's centre
      * @return                An array [rasterX, rasterY]
      */
-    static double[] toRaster(double[] cartesianPoints, int centreX, int centreY) {
+    public static double[] toRaster(double[] cartesianPoints, int centreX, int centreY) {
 
         double[] points = new double[2];
         points[0] = cartesianPoints[0] + (double)centreX;
@@ -122,11 +124,11 @@ final class Helpers {
     }
 
     /**
-     * Take the raster points of type double and return floored values
-     * @param rasterPoints An array of type double [rasterX, rasterY]
-     * @return             An array of type int [rasterX, rasterY] 
+     * Take the raster points of type double[] and returns the floored values
+     * @param rasterPoints An array of type double {rasterX, rasterY}
+     * @return             An array of type int {rasterX, rasterY}
      */
-    static int[] floorPoints(double[] rasterPoints) {
+    public static int[] floorPoints(double[] rasterPoints) {
 
         int[] floored = new int[2];
         floored[0] = (int)Math.floor(rasterPoints[0]);
@@ -136,11 +138,11 @@ final class Helpers {
     }
 
     /**
-     * Take the raster points of type double and return ceiled values
-     * @param rasterPoints An array of type double [rasterX, rasterY]
-     * @return             An array of type int [rasterX, rasterY] 
+     * Take the raster points of type double[] and returns the ceiled values
+     * @param rasterPoints An array of type double {rasterX, rasterY}
+     * @return             An array of type int {rasterX, rasterY}
      */
-    static int[] ceilPoints(double[] rasterPoints) {
+    public static int[] ceilPoints(double[] rasterPoints) {
 
         int[] ceiled = new int[2];
         ceiled[0] = (int)Math.ceil(rasterPoints[0]);
@@ -150,18 +152,18 @@ final class Helpers {
     }
 
     /**
-     * Check if a given index if out of bounds w.r.t. the given array's length
+     * Check if a given index is out of bounds w.r.t. the given array's length
      * @param givenIndex  
      * @param length
-     * @return      true if given index is out of bounds
+     * @return      {@code True} if given index is out of bounds
      */
-    static boolean outOfBounds(int givenIndex, int length) {
+    public static boolean isOutOfBounds(int givenIndex, int length) {
 
         return (givenIndex < 0 || givenIndex >= length);
     }
 
     /**
-     * Linear interpolation, f(t) = (1 - t) * p1 + (t * p2)
+     * Linear interpolation, {@code f(t) = (1 - t) * p1 + (t * p2)}
      * where p1 and p2 are two points in-between which we need to
      * find a new point which is at 't' times the distance between p1 and p2
      * @param left  Any point
@@ -169,7 +171,7 @@ final class Helpers {
      * @param right Any point greater than left on the real number line
      * @return      The result of interpolation
      */
-    static double linearInterpolation(double left, double delta, double right) {
+    public static double linearInterpolation(double left, double delta, double right) {
 
         // Handle an invalid case, could return -1 too but that will break the methods of Filters.java
         if (delta < 0 || delta > 1) {
@@ -186,7 +188,7 @@ final class Helpers {
      * @param pixel
      * @return A truncated pixel value
      */
-    static int truncateIfNeeded(int pixel) {
+    public static int truncateIfNeeded(int pixel) {
 
         if (pixel < 0) {
             return 0;
@@ -209,7 +211,7 @@ final class Helpers {
      * @param deltaY        A value in the range [0, 1], for vertical linear interpolation
      * @return              The interpolated value
      */
-    static int bilinearInterpolation(Color topLeft, Color topRight, 
+    public static int bilinearInterpolation(Color topLeft, Color topRight, 
                                 Color bottomLeft, Color bottomRight, 
                                 double deltaX, double deltaY) {
 
@@ -224,18 +226,16 @@ final class Helpers {
         double bottomB = linearInterpolation(bottomLeft.getBlue(), deltaX, bottomRight.getBlue());
 
         // Compute the R, G, B values
-        int red = (int)Math.round(linearInterpolation(topR, deltaY, bottomR));
-        int green = (int)Math.round(linearInterpolation(topG, deltaY, bottomG));
-        int blue = (int)Math.round(linearInterpolation(topB, deltaY, bottomB));
+        int red = (int) Math.round(linearInterpolation(topR, deltaY, bottomR));
+        int green = (int) Math.round(linearInterpolation(topG, deltaY, bottomG));
+        int blue = (int) Math.round(linearInterpolation(topB, deltaY, bottomB));
 
 
         red = truncateIfNeeded(red);
         green = truncateIfNeeded(green);
         blue = truncateIfNeeded(blue);
 
-        Color finalColor = new Color(red, green, blue);
-
-        return finalColor.getRGB();
+        return new Color(red, green, blue).getRGB();
     }
 
     /**
@@ -244,7 +244,7 @@ final class Helpers {
      * @param dial  A value in the range [-1.0, 1.0]
      * @throws ArrayIndexOutOfBoundsException
      */
-    static void lightDial(BufferedImage image, double dial) throws ArrayIndexOutOfBoundsException {
+    public static void lightDial(BufferedImage image, double dial) throws ArrayIndexOutOfBoundsException {
 
         if (dial > 1.0 || dial < 1.0) {
             return;
@@ -262,15 +262,15 @@ final class Helpers {
                 int newB = 0;
 
                 if (dial > 0.0) {
-                    newR = (int)linearInterpolation(color.getRed(), dial, limit);
-                    newG = (int)linearInterpolation(color.getGreen(), dial, limit);
-                    newB = (int)linearInterpolation(color.getBlue(), dial, limit);
+                    newR = (int) linearInterpolation(color.getRed(), dial, limit);
+                    newG = (int) linearInterpolation(color.getGreen(), dial, limit);
+                    newB = (int) linearInterpolation(color.getBlue(), dial, limit);
                 }            
                 else {
                     dial = -1.0 * dial;
-                    newR = (int)linearInterpolation(limit, dial, color.getRed());
-                    newG = (int)linearInterpolation(limit, dial, color.getGreen());
-                    newB = (int)linearInterpolation(limit, dial, color.getBlue());
+                    newR = (int) linearInterpolation(limit, dial, color.getRed());
+                    newG = (int) linearInterpolation(limit, dial, color.getGreen());
+                    newB = (int) linearInterpolation(limit, dial, color.getBlue());
                 }    
 
                 Color newColor = new Color(newR, newG, newB);
@@ -280,17 +280,12 @@ final class Helpers {
     }
 
     /**
-     * Takes a pixel value and reduces it
-     * to one of the 4 distinct values. If
-     * the value is invalid, the method returns 
-     * 255. The rules for deciding the values and 
-     * the number of distinct values can vary depending
-     * upon implementation. The idea here is to reduce 
-     * the number of distinct colors used in an image. 
+     * Takes a pixel value and reduces it to one of the 4 distinct values.
+     * If the value is invalid, the method returns {@code 255}.
      * @param pixel A pixel value
      * @return      A reduced pixel value
      */
-    static int reducePixel(int pixel) {
+    public static int reducePixel(int pixel) {
 
         if (pixel < 64) {
             return 0;
