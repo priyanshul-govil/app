@@ -1,9 +1,3 @@
-/** 
- * Helpers.java 
- * Contains utility methods used by Filter.java
- * @author Vivek Nathani
- */
- 
 package secur3dit.filters;
 
 import java.awt.Color;

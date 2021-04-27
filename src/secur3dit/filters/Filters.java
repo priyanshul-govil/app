@@ -1,10 +1,3 @@
-/**
- * Filters.java 
- * Contains various filters that would be used by the main desktop application.
- * @author Vivek Nathani
- * @author Naman Nihal
- */
-
 package secur3dit.filters;
 
 import java.awt.AlphaComposite;
@@ -17,20 +10,20 @@ import java.awt.image.BufferedImage;
 
 /**
  * Contains methods to apply filters on images.
- * @author Vivek Nathani
  * @author Naman Nihal
+ * @author Vivek Nathani
  */
-public class Filters {
+public final class Filters {
 
     /**
-     * Mirror an image, works in O(height * width)
+     * Mirrors an image, works in {@code O(height * width)}
      * @param image     The input image
      * @param vertical  A boolean variable which is true if image is to be mirrored vertically
      * @return          The mirrored image
      * @throws ArrayIndexOutOfBoundsException
      */
-    public static BufferedImage mirror(BufferedImage image, boolean vertical) throws 
-                                                    ArrayIndexOutOfBoundsException {
+    public static BufferedImage mirror(BufferedImage image, boolean vertical)
+                                        throws ArrayIndexOutOfBoundsException {
 
         // Make a new object in memory
         BufferedImage result = Helpers.deepCopy(image);
@@ -39,7 +32,6 @@ public class Filters {
 
         if (vertical) {
             for (int i = 0; i < height; ++i) {
-
                 for (int j = 0; j < width / 2; ++j) {
 
                     // Swap pixel at (j, i) position with pixel at (width - j - 1, i) position
@@ -51,7 +43,6 @@ public class Filters {
         } 
         else {
             for (int j = 0; j < width; ++j) {
-
                 for (int i = 0; i < height / 2; ++i) {
 
                     // Swap pixel at (j, i) position with pixel at (j, height - i - 1) position
@@ -66,17 +57,17 @@ public class Filters {
     }
 
     /**
-     * Produces a clipped image rotated by angle degrees,
-     * by treating the image as a rectangle on a cartesian plane 
+     * Produces a clipped image rotated by {@code angle} degrees,
+     * by treating the image as a rectangle on the cartesian plane
      * and using bilinear interpolation to find the pixel value at every co-ordinate that 
      * will not have a black color after rotation. For more information about the math involved,
-     * visit [https://en.wikipedia.org/wiki/Bilinear_interpolation]
+     * visit https://en.wikipedia.org/wiki/Bilinear_interpolation
      * @param image The input image
      * @param angle Floating-point degree, anti-clockwise 
      * @return      The rotated image
      */
-    public static BufferedImage rotate(BufferedImage image, double angle) throws 
-                                                 ArrayIndexOutOfBoundsException {
+    public static BufferedImage rotate(BufferedImage image, double angle)
+                                    throws ArrayIndexOutOfBoundsException {
                                                     
         int width = image.getWidth();
         int height = image.getHeight();
@@ -96,7 +87,6 @@ public class Filters {
         int centreY = height / 2;
 
         for (int i = 0; i < height; ++i) {
-
             for (int j = 0; j < width; ++j) {
 
                 result.setRGB(j, i, Color.black.getRGB());
@@ -126,10 +116,11 @@ public class Filters {
                 int[] ceiled = Helpers.ceilPoints(rasterPoints);
                 
                 // Check for bounds
-                if (Helpers.outOfBounds(floored[0], width) || 
-                    Helpers.outOfBounds(floored[1], height) || 
-                    Helpers.outOfBounds(ceiled[0], width) || 
-                    Helpers.outOfBounds(ceiled[1], height)) {
+                if (Helpers.isOutOfBounds(floored[0], width)  || 
+                    Helpers.isOutOfBounds(floored[1], height) || 
+                    Helpers.isOutOfBounds(ceiled[0], width)   || 
+                    Helpers.isOutOfBounds(ceiled[1], height)) {
+                        
                         continue;
                 }
 
@@ -145,7 +136,7 @@ public class Filters {
 
                 // Perform bilinear interpolation on these four colors
                 int finalColor = Helpers.bilinearInterpolation(topLeft, topRight, bottomLeft,
-                    bottomRight, deltaX, deltaY);
+                                                                bottomRight, deltaX, deltaY);
                     
                 result.setRGB(j, i, finalColor);
             }
@@ -156,13 +147,13 @@ public class Filters {
 
     /**
      * Detects edges in an image.
-     * For the math, check [https://en.wikipedia.org/wiki/Sobel_operator]
+     * For the math, check https://en.wikipedia.org/wiki/Sobel_operator
      * @param image The input image
      * @return      An image that has outlined edges in it
      * @throws ArrayIndexOutOfBoundsException
      */
-    public static BufferedImage detectEdges(BufferedImage image) throws 
-                                        ArrayIndexOutOfBoundsException {
+    public static BufferedImage detectEdges(BufferedImage image)
+                            throws ArrayIndexOutOfBoundsException {
 
         int width = image.getWidth();
         int height = image.getHeight();
@@ -189,7 +180,6 @@ public class Filters {
                 }
 
                 for (int m = 0; m < 3; ++m) {
-
                     for (int n = 0; n < 3; ++n) {
 
                         // Compute indices to operate upon
@@ -197,8 +187,9 @@ public class Filters {
                         int indexJ = j + n - 1;
 
                         // Check for bounds
-                        if (Helpers.outOfBounds(indexI, height) || 
-                            Helpers.outOfBounds(indexJ, width)) {
+                        if (Helpers.isOutOfBounds(indexI, height) || 
+                            Helpers.isOutOfBounds(indexJ, width)) {
+                                
                                 continue;
                         }
 
@@ -216,8 +207,10 @@ public class Filters {
 
                 // Compute the vector sum for each color value
                 for (int k = 0; k < 3; ++k) {
-                    sobelXY[k] = (int) Math.round(Math.sqrt((sobelSumX[k] * sobelSumX[k] + 
-                                                             sobelSumY[k] * sobelSumY[k])));
+
+                    sobelXY[k] = (int) Math.round(Math.sqrt((
+                                        sobelSumX[k] * sobelSumX[k] + sobelSumY[k] * sobelSumY[k])));
+                    
                     sobelXY[k] = Helpers.truncateIfNeeded(sobelXY[k]);
                 }
 
@@ -269,22 +262,21 @@ public class Filters {
     }
 
     /**
-     * Takes an image and makes it grayscale
+     * Takes an image and makes it grayscale.
      * @param image The input image
      * @return      The grayscaled image
      * @throws ArrayIndexOutOfBoundsException
      */
-    public static BufferedImage grayscale(BufferedImage image) throws 
-                                    ArrayIndexOutOfBoundsException {
+    public static BufferedImage grayscale(BufferedImage image)
+                        throws ArrayIndexOutOfBoundsException {
 
         BufferedImage img = Helpers.deepCopy(image);
 
         int width = img.getWidth();
         int height = img.getHeight();
 
-        for (int i = 0; i < width; i++) {
-
-            for (int j = 0; j < height; j++) {
+        for (int i = 0; i < width; ++i) {
+            for (int j = 0; j < height; ++j) {
 
                 Color color = new Color(img.getRGB(i, j));
 
@@ -297,26 +289,26 @@ public class Filters {
                 img.setRGB(i, j, shadeOfGray.getRGB());
             }
         }
+
         return img;
     }
 
     /**
-     * Apply the sepia effect
+     * Apply the sepia effect.
      * @param image The input image
      * @return      The image with the sepia effect
      * @throws ArrayIndexOutOfBoundsException
      */
-    public static BufferedImage sepia(BufferedImage image) throws 
-                                    ArrayIndexOutOfBoundsException {
+    public static BufferedImage sepia(BufferedImage image) 
+                        throws ArrayIndexOutOfBoundsException {
 
         BufferedImage img = Helpers.deepCopy(image);
 
         int width = img.getWidth();
         int height = img.getHeight();
 
-        for (int i = 0; i < width; i++) {
-
-            for (int j = 0; j < height; j++) {
+        for (int i = 0; i < width; ++i) {
+            for (int j = 0; j < height; ++j) {
 
                 Color color = new Color(img.getRGB(i, j));
 
@@ -337,21 +329,21 @@ public class Filters {
     }
 
     /**
-     * Inverts an image
+     * Inverts an image.
      * @param image The input image
      * @return      The negative/inverted image
      * @throws ArrayIndexOutOfBoundsException
      */
-    public static BufferedImage negative(BufferedImage image) throws 
-                                    ArrayIndexOutOfBoundsException {
+    public static BufferedImage negative(BufferedImage image) 
+                            throws ArrayIndexOutOfBoundsException {
+        
         BufferedImage img = Helpers.deepCopy(image);
 
         int width = img.getWidth();
         int height = img.getHeight();
 
-        for (int i = 0; i < width; i++) {
-
-            for (int j = 0; j < height; j++) {
+        for (int i = 0; i < width; ++i) {
+            for (int j = 0; j < height; ++j) {
 
                 Color color = new Color(img.getRGB(i, j));
 
@@ -363,19 +355,19 @@ public class Filters {
                 img.setRGB(i, j, newColor.getRGB());
             }
         }
-        return img;
 
+        return img;
     }
 
     /**
-     * Add a watermark to an image
+     * Add a watermark to an image.
      * @param image         The input image
      * @param watermarkText A string that contains the watermark content
      * @return              Image with the applied watermark
      * @throws NullPointerException
      */
-    public static BufferedImage addWatermark(BufferedImage image, String watermarkText) throws 
-                                                                        NullPointerException {
+    public static BufferedImage addWatermark(BufferedImage image, String watermarkText)
+                                                                throws NullPointerException {
         
         BufferedImage img = Helpers.deepCopy(image);
         Graphics2D graphics = (Graphics2D) img.getGraphics();
@@ -399,14 +391,15 @@ public class Filters {
     }
 
     /**
-     * Apply box blur on an image, in O(height * width)
+     * Apply box blur on an image in {@code O(height * width)}.
      * @param source        The input image
      * @param target        The image that will store the result of boxBlur
-     * @param kernelRadius  An integer value in the range, [1, min(source.height - 1, source.width - 1)]
+     * @param kernelRadius  An integer value in the range 
+     *                      [1, min({@code source.height} - 1, {@code source.width} - 1)]
      * @throws ArrayIndexOutOfBoundsException
      */
-    static void boxBlur(BufferedImage source, BufferedImage target, int kernelRadius) throws 
-                                                            ArrayIndexOutOfBoundsException {
+    public static void boxBlur(BufferedImage source, BufferedImage target, int kernelRadius) 
+                                                        throws ArrayIndexOutOfBoundsException {
 
         if (kernelRadius < 0 || kernelRadius >= Math.min(source.getHeight(), source.getWidth())) {
             return;
@@ -415,7 +408,7 @@ public class Filters {
         int width = source.getWidth();
         int height = source.getHeight();
                                                                 
-        double kernelCoefficient = 1.0 / ((2.0 * (double)kernelRadius) + 1.0);
+        double kernelCoefficient = 1.0 / ((2.0 * (double) kernelRadius) + 1.0);
 
         // Go through each row first, on the source itself
         for (int i = 0; i < height; ++i) {
@@ -444,9 +437,9 @@ public class Filters {
                 sumG += (color.getGreen() - fcolor.getGreen());
                 sumB += (color.getBlue()- fcolor.getBlue());
                 ++ri;
-                int finalR = (int)Math.round((double)sumR * kernelCoefficient);
-                int finalG = (int)Math.round((double)sumG * kernelCoefficient);
-                int finalB = (int)Math.round((double)sumB * kernelCoefficient);
+                int finalR = (int) Math.round((double) sumR * kernelCoefficient);
+                int finalG = (int) Math.round((double) sumG * kernelCoefficient);
+                int finalB = (int) Math.round((double) sumB * kernelCoefficient);
                 Color finalColor = new Color(finalR, finalG, finalB);
                 source.setRGB(ti, i, finalColor.getRGB());
                 ++ti;
@@ -461,9 +454,9 @@ public class Filters {
                 sumG += (color.getGreen() - lcolor.getGreen());
                 sumB += (color.getBlue()- lcolor.getBlue());
                 ++ri;
-                int finalR = (int)Math.round((double)sumR * kernelCoefficient);
-                int finalG = (int)Math.round((double)sumG * kernelCoefficient);
-                int finalB = (int)Math.round((double)sumB * kernelCoefficient);
+                int finalR = (int) Math.round((double) sumR * kernelCoefficient);
+                int finalG = (int) Math.round((double) sumG * kernelCoefficient);
+                int finalB = (int) Math.round((double) sumB * kernelCoefficient);
                 Color finalColor = new Color(finalR, finalG, finalB);
                 source.setRGB(ti, i, finalColor.getRGB());
                 ++ti;
@@ -477,9 +470,9 @@ public class Filters {
                 sumG += (lastColor.getGreen() - lcolor.getGreen());
                 sumB += (lastColor.getBlue()- lcolor.getBlue());
                 
-                int finalR = (int)Math.round((double)sumR * kernelCoefficient);
-                int finalG = (int)Math.round((double)sumG * kernelCoefficient);
-                int finalB = (int)Math.round((double)sumB * kernelCoefficient);
+                int finalR = (int) Math.round((double) sumR * kernelCoefficient);
+                int finalG = (int) Math.round((double) sumG * kernelCoefficient);
+                int finalB = (int) Math.round((double) sumB * kernelCoefficient);
                 Color finalColor = new Color(finalR, finalG, finalB);
                 source.setRGB(ti, i, finalColor.getRGB());
                 ++ti;
@@ -488,6 +481,7 @@ public class Filters {
 
         // Go through each column, on the target
         for (int i = 0; i < width; ++i) {
+
             Color fcolor = new Color(source.getRGB(i, 0));
             Color lastColor = new Color(source.getRGB(i, height - 1));
             int sumR =  fcolor.getRed() * (kernelRadius + 1);
@@ -499,25 +493,29 @@ public class Filters {
                 sumR += color.getRed();
                 sumG += color.getGreen();
                 sumB += color.getBlue();
-            }            
+            }
+
             int ti = 0;
             int li = ti;
             int ri = ti + kernelRadius;
+
             for (int j = 0; j <= kernelRadius; ++j) {
+
                 Color color = new Color(source.getRGB(i, ri));
                 sumR += (color.getRed() - fcolor.getRed());
                 sumG += (color.getGreen() - fcolor.getGreen());
                 sumB += (color.getBlue()- fcolor.getBlue());
                 ++ri;
-                int finalR = (int)Math.round((double)sumR * kernelCoefficient);
-                int finalG = (int)Math.round((double)sumG * kernelCoefficient);
-                int finalB = (int)Math.round((double)sumB * kernelCoefficient);
+                int finalR = (int) Math.round((double) sumR * kernelCoefficient);
+                int finalG = (int) Math.round((double) sumG * kernelCoefficient);
+                int finalB = (int) Math.round((double) sumB * kernelCoefficient);
                 Color finalColor = new Color(finalR, finalG, finalB);
                 target.setRGB(i, ti, finalColor.getRGB());
                 ++ti;
             }
 
             for (int j = kernelRadius + 1; j < height - kernelRadius; ++j) {
+
                 Color color = new Color(source.getRGB(i, ri));
                 Color lcolor = new Color(source.getRGB(i, li));
                 ++li;
@@ -525,24 +523,25 @@ public class Filters {
                 sumG += (color.getGreen() - lcolor.getGreen());
                 sumB += (color.getBlue()- lcolor.getBlue());
                 ++ri;
-                int finalR = (int)Math.round((double)sumR * kernelCoefficient);
-                int finalG = (int)Math.round((double)sumG * kernelCoefficient);
-                int finalB = (int)Math.round((double)sumB * kernelCoefficient);
+                int finalR = (int) Math.round((double) sumR * kernelCoefficient);
+                int finalG = (int) Math.round((double) sumG * kernelCoefficient);
+                int finalB = (int) Math.round((double) sumB * kernelCoefficient);
                 Color finalColor = new Color(finalR, finalG, finalB);
                 target.setRGB(i, ti, finalColor.getRGB());
                 ++ti;
             }
 
             for (int j = height - kernelRadius; j < height; ++j) {
+
                 Color lcolor = new Color(source.getRGB(i, li));
                 ++li;
                 sumR += (lastColor.getRed() - lcolor.getRed());
                 sumG += (lastColor.getGreen() - lcolor.getGreen());
                 sumB += (lastColor.getBlue()- lcolor.getBlue());
                 
-                int finalR = (int)Math.round((double)sumR * kernelCoefficient);
-                int finalG = (int)Math.round((double)sumG * kernelCoefficient);
-                int finalB = (int)Math.round((double)sumB * kernelCoefficient);
+                int finalR = (int) Math.round((double) sumR * kernelCoefficient);
+                int finalG = (int) Math.round((double) sumG * kernelCoefficient);
+                int finalB = (int) Math.round((double) sumB * kernelCoefficient);
                 Color finalColor = new Color(finalR, finalG, finalB);
                 target.setRGB(i, ti, finalColor.getRGB());
                 ++ti;
@@ -551,9 +550,10 @@ public class Filters {
     }
 
     /**
-     * Uses box blur to achieve the effect of gaussian blur
+     * Uses box blur to achieve the effect of gaussian blur.
      * @param image     The input image
-     * @param intensity Integer in the range [1, min(image.height - 1, image.width - 1)]
+     * @param intensity Integer in the range
+     *                  [1, min({@code image.height} - 1, {@code image.width} - 1)]
      * @return          The blurred image
      */
     public static BufferedImage gaussianBlur(BufferedImage image, int intensity) {
@@ -575,23 +575,22 @@ public class Filters {
     }
 
     /**
-     * Takes an image and returns a posterized version of it. 
-     * Posterization achieves this by reducing the distinct pixels in 
-     * an image. We apply the Helpers.reducePixel() method on R,G,B 
-     * value of every pixel. 
+     * Takes an image and returns a posterized version of it by reducing 
+     * its distinct pixels.  
      * @param image The input image
      * @return      The posterized image
      * @throws ArrayIndexOutOfBoundsException
      */
-    public static BufferedImage posterize(BufferedImage image) throws 
-                                    ArrayIndexOutOfBoundsException {
+    public static BufferedImage posterize(BufferedImage image) 
+                            throws ArrayIndexOutOfBoundsException {
         
+        // We apply the Helpers.reducePixel() method on R,G,B value of every pixel.
+
         BufferedImage result = Helpers.deepCopy(image);
         int width = image.getWidth();
         int height = image.getHeight();
     
         for (int i = 0; i < height; ++i) {
-
             for (int j = 0; j < width; ++j) {
 
                 // get the color
@@ -613,23 +612,24 @@ public class Filters {
     
     /**
      * Takes an image and returns a pixelated version of it.
-     * A square window of side length pixelWidth slides through the image,
-     * jumping at a length of pixelWidth after each iteration. In each slide, 
-     * it sets the R,G,B values of every pixel to the average values in that window.
      * @param image         The input image
-     * @param pixelWidth    An integer in the range [1, min(height - 1, width - 1)]
+     * @param pixelWidth    An integer in the range 
+     *                      [1, min({@code height} - 1, {@code width} - 1)]
      * @return              The pixelated image
      * @throws ArrayIndexOutOfBoundsException
      */
-    public static BufferedImage pixelate(BufferedImage image, int pixelWidth) throws 
-                                                    ArrayIndexOutOfBoundsException {
-        
+    public static BufferedImage pixelate(BufferedImage image, int pixelWidth)
+                                            throws ArrayIndexOutOfBoundsException {
+
+        // A square window of side length pixelWidth slides through the image,
+        // jumping at a length of pixelWidth after each iteration. In each slide,
+        // it sets the R,G,B values of every pixel to the average values in that window.
+
         BufferedImage result = Helpers.deepCopy(image);
         int width = image.getWidth();
         int height = image.getHeight();
 
         for (int i = 0; i < height; i += pixelWidth) {
-
             for (int j = 0; j < width; j += pixelWidth) {
 
                 int avgRed = 0;
@@ -644,7 +644,6 @@ public class Filters {
 
                 // Traverse and add the pixel values
                 for (int y = i; y < i + pixelWidth && y < height; ++y) {
-
                     for (int x = j; x < j + pixelWidth && x < width; ++x) {
 
                         Color color = new Color(result.getRGB(x, y));
@@ -666,7 +665,6 @@ public class Filters {
 
                 // Set all pixels in the submatrix to finalColor
                 for (int y = i; y < i + pixelWidth && y < height; ++y) {
-
                     for (int x = j; x < j + pixelWidth && x < width; ++x) {
 
                         result.setRGB(x, y, finalColor.getRGB());
@@ -679,23 +677,23 @@ public class Filters {
     }
 
     /**
-     * Takes an image and returns a sharpened version of it
-     * with given intensity. The intensity parameter is used to produce
-     * a 3x3 kernel which will be convolved with the image. The process is 
-     * similar to blurring an image using box blur just once. Since the kernel 
-     * is just 3x3, the total steps for convolutionResult calculation in each 
-     * iteration will always be 9. Hence, this kernel is not made separable and 
-     * works in O(height * width), similar to box blur with a separable kernel 
-     * and varying kernelRadius. The intensity can theoretically range from 
-     * [0, infinity). However, in practice, after a threshold, the higher values 
-     * would become pointless to use due to results that would not please the
-     * human eye. That threshold would depend upon how blurred the input image is.
-     * 
+     * Takes an image and returns a sharpened version of it with given intensity. 
      * @param image     The input image
-     * @param intensity Integer indicating how sharpened the result should be
+     * @param intensity Integer indicating the sharpness required
      * @return          The sharpened image
      */
     public static BufferedImage sharpen(BufferedImage image, int intensity) {
+
+     // The intensity parameter is used to produce a 3x3 kernel
+     // which will be convolved with the image. The process is similar to
+     // blurring an image using box blur just once. Since the kernel 
+     // is just 3x3, the total steps for convolutionResult calculation in each 
+     // iteration will always be 9. Hence, this kernel is not made separable and 
+     // works in O(height * width), similar to box blur with a separable kernel 
+     // and varying kernelRadius. The intensity can theoretically range from 
+     // [0, infinity). However, in practice, after a threshold, the higher values 
+     // would become pointless to use due to results that would not please the
+     // human eye. That threshold would depend upon how blurred the input image is.
 
         BufferedImage result = Helpers.deepCopy(image);
         int width = image.getWidth();
@@ -713,6 +711,7 @@ public class Filters {
                 // Convolve
                 for (int x = -1; x <= 1; ++x) {
                     for (int y = -1; y <= 1; ++y) {
+                        
                         Color color = new Color(image.getRGB(j + x, i + y));
                         convolutionResult[0] += kernel[x + 1][y + 1] * color.getRed();
                         convolutionResult[1] += kernel[x + 1][y + 1] * color.getGreen();        
