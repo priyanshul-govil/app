@@ -20,7 +20,7 @@ final class Helpers {
      * @throws RasterFormatException
      * @throws IllegalArgumentException
      */
-    public static BufferedImage deepCopy(BufferedImage image) 
+    static BufferedImage deepCopy(BufferedImage image) 
             throws RasterFormatException, IllegalArgumentException {
 
         ColorModel cm = image.getColorModel();
@@ -35,7 +35,7 @@ final class Helpers {
      * @param degreeAngle An angle in degrees
      * @return            The angle in radians  
      */
-    public static double toRadians(double degreeAngle) {
+    static double toRadians(double degreeAngle) {
 
         double result = (degreeAngle * Math.PI) / 180.0;
         return result;
@@ -50,7 +50,7 @@ final class Helpers {
      * @return          An array of size 2 where first value is the cartesian X co-ordinate and 
      *                  second value is the cartesian Y co-ordinate
      */
-    public static int[] toCartesian(int rasterX, int rasterY, int centreX, int centreY) {
+    static int[] toCartesian(int rasterX, int rasterY, int centreX, int centreY) {
 
         int points[] = new int[2];
         points[0] = rasterX - centreX;
@@ -66,7 +66,7 @@ final class Helpers {
      * @return An array of size 2 where first value is the distance of the point from origin
      *         and second value is the polar angle 
      */
-    public static double[] toPolar(int cartesianX, int cartesianY) {
+    static double[] toPolar(int cartesianX, int cartesianY) {
 
         double data[] = new double[2];
         data[0] = Math.sqrt((cartesianX * cartesianX) + (cartesianY * cartesianY));
@@ -92,7 +92,7 @@ final class Helpers {
      *                  from origin and the second value is the polar angle
      * @return An array [cartesianX, cartesianY]
      */
-    public static double[] toCartesian(double[] polarData) {
+    static double[] toCartesian(double[] polarData) {
 
         double[] points = new double[2];
         points[0] = polarData[0] * Math.cos(polarData[1]);
@@ -108,7 +108,7 @@ final class Helpers {
      * @param centreY         y co-ordinate of the given raster plane's centre
      * @return                An array [rasterX, rasterY]
      */
-    public static double[] toRaster(double[] cartesianPoints, int centreX, int centreY) {
+    static double[] toRaster(double[] cartesianPoints, int centreX, int centreY) {
 
         double[] points = new double[2];
         points[0] = cartesianPoints[0] + (double)centreX;
@@ -122,7 +122,7 @@ final class Helpers {
      * @param rasterPoints An array of type double {rasterX, rasterY}
      * @return             An array of type int {rasterX, rasterY}
      */
-    public static int[] floorPoints(double[] rasterPoints) {
+    static int[] floorPoints(double[] rasterPoints) {
 
         int[] floored = new int[2];
         floored[0] = (int)Math.floor(rasterPoints[0]);
@@ -136,7 +136,7 @@ final class Helpers {
      * @param rasterPoints An array of type double {rasterX, rasterY}
      * @return             An array of type int {rasterX, rasterY}
      */
-    public static int[] ceilPoints(double[] rasterPoints) {
+    static int[] ceilPoints(double[] rasterPoints) {
 
         int[] ceiled = new int[2];
         ceiled[0] = (int)Math.ceil(rasterPoints[0]);
@@ -151,7 +151,7 @@ final class Helpers {
      * @param length
      * @return      {@code True} if given index is out of bounds
      */
-    public static boolean isOutOfBounds(int givenIndex, int length) {
+    static boolean isOutOfBounds(int givenIndex, int length) {
 
         return (givenIndex < 0 || givenIndex >= length);
     }
@@ -165,7 +165,7 @@ final class Helpers {
      * @param right Any point greater than left on the real number line
      * @return      The result of interpolation
      */
-    public static double linearInterpolation(double left, double delta, double right) {
+    static double linearInterpolation(double left, double delta, double right) {
 
         // Handle an invalid case, could return -1 too but that will break the methods of Filters.java
         if (delta < 0 || delta > 1) {
@@ -182,7 +182,7 @@ final class Helpers {
      * @param pixel
      * @return A truncated pixel value
      */
-    public static int truncateIfNeeded(int pixel) {
+    static int truncateIfNeeded(int pixel) {
 
         if (pixel < 0) {
             return 0;
@@ -205,7 +205,7 @@ final class Helpers {
      * @param deltaY        A value in the range [0, 1], for vertical linear interpolation
      * @return              The interpolated value
      */
-    public static int bilinearInterpolation(Color topLeft, Color topRight, 
+    static int bilinearInterpolation(Color topLeft, Color topRight, 
                                 Color bottomLeft, Color bottomRight, 
                                 double deltaX, double deltaY) {
 
@@ -238,7 +238,7 @@ final class Helpers {
      * @param dial  A value in the range [-1.0, 1.0]
      * @throws ArrayIndexOutOfBoundsException
      */
-    public static void lightDial(BufferedImage image, double dial) throws ArrayIndexOutOfBoundsException {
+    static void lightDial(BufferedImage image, double dial) throws ArrayIndexOutOfBoundsException {
 
         if (dial > 1.0 || dial < 1.0) {
             return;
@@ -279,7 +279,7 @@ final class Helpers {
      * @param pixel A pixel value
      * @return      A reduced pixel value
      */
-    public static int reducePixel(int pixel) {
+    static int reducePixel(int pixel) {
 
         if (pixel < 64) {
             return 0;
