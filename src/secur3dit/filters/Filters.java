@@ -294,22 +294,21 @@ public final class Filters {
     }
 
     /**
-     * Apply the sepia effect
+     * Apply the sepia effect.
      * @param image The input image
      * @return      The image with the sepia effect
      * @throws ArrayIndexOutOfBoundsException
      */
-    public static BufferedImage sepia(BufferedImage image) throws 
-                                    ArrayIndexOutOfBoundsException {
+    public static BufferedImage sepia(BufferedImage image) 
+                        throws ArrayIndexOutOfBoundsException {
 
         BufferedImage img = Helpers.deepCopy(image);
 
         int width = img.getWidth();
         int height = img.getHeight();
 
-        for (int i = 0; i < width; i++) {
-
-            for (int j = 0; j < height; j++) {
+        for (int i = 0; i < width; ++i) {
+            for (int j = 0; j < height; ++j) {
 
                 Color color = new Color(img.getRGB(i, j));
 
