@@ -262,22 +262,21 @@ public final class Filters {
     }
 
     /**
-     * Takes an image and makes it grayscale
+     * Takes an image and makes it grayscale.
      * @param image The input image
      * @return      The grayscaled image
      * @throws ArrayIndexOutOfBoundsException
      */
-    public static BufferedImage grayscale(BufferedImage image) throws 
-                                    ArrayIndexOutOfBoundsException {
+    public static BufferedImage grayscale(BufferedImage image)
+                        throws ArrayIndexOutOfBoundsException {
 
         BufferedImage img = Helpers.deepCopy(image);
 
         int width = img.getWidth();
         int height = img.getHeight();
 
-        for (int i = 0; i < width; i++) {
-
-            for (int j = 0; j < height; j++) {
+        for (int i = 0; i < width; ++i) {
+            for (int j = 0; j < height; ++j) {
 
                 Color color = new Color(img.getRGB(i, j));
 
@@ -290,6 +289,7 @@ public final class Filters {
                 img.setRGB(i, j, shadeOfGray.getRGB());
             }
         }
+
         return img;
     }
 
