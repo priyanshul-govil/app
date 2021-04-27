@@ -1,10 +1,3 @@
-/**
- * Filters.java 
- * Contains various filters that would be used by the main desktop application.
- * @author Vivek Nathani
- * @author Naman Nihal
- */
-
 package secur3dit.filters;
 
 import java.awt.AlphaComposite;
@@ -126,10 +119,10 @@ public class Filters {
                 int[] ceiled = Helpers.ceilPoints(rasterPoints);
                 
                 // Check for bounds
-                if (Helpers.outOfBounds(floored[0], width) || 
-                    Helpers.outOfBounds(floored[1], height) || 
-                    Helpers.outOfBounds(ceiled[0], width) || 
-                    Helpers.outOfBounds(ceiled[1], height)) {
+                if (Helpers.isOutOfBounds(floored[0], width) || 
+                    Helpers.isOutOfBounds(floored[1], height) || 
+                    Helpers.isOutOfBounds(ceiled[0], width) || 
+                    Helpers.isOutOfBounds(ceiled[1], height)) {
                         continue;
                 }
 
@@ -197,8 +190,8 @@ public class Filters {
                         int indexJ = j + n - 1;
 
                         // Check for bounds
-                        if (Helpers.outOfBounds(indexI, height) || 
-                            Helpers.outOfBounds(indexJ, width)) {
+                        if (Helpers.isOutOfBounds(indexI, height) || 
+                            Helpers.isOutOfBounds(indexJ, width)) {
                                 continue;
                         }
 
