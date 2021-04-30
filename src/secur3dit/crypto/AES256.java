@@ -5,7 +5,7 @@ package secur3dit.crypto;
  * Details at: https://en.wikipedia.org/wiki/Advanced_Encryption_Standard
  * @author  Priyanshul Govil
  */
-final class AES256 {
+public final class AES256 {
 
     private static final int ROUND_COUNT = 14;
     

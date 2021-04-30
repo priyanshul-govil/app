@@ -19,7 +19,7 @@ import java.security.NoSuchAlgorithmException;
  * Details about CTR mode: https://en.wikipedia.org/wiki/Block_cipher_mode_of_operation#Counter_(CTR)
  * @author  Priyanshul Govil
  */
-public class AES256CTR {
+public final class AES256CTR {
     
     private final char[] key;
     private final char[] nonce;
