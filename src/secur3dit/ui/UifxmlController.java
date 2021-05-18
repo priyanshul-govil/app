@@ -75,7 +75,6 @@ public class UifxmlController implements Initializable {
     @FXML
     private Button insertNewImageButton;
 
-
     @FXML
     private void insertImage(ActionEvent e) throws IOException {
         FileChooser f = new FileChooser();
@@ -96,9 +95,9 @@ public class UifxmlController implements Initializable {
     }
 
     void updateImage() {
-      
+
         imagePreview.setVisible(false);
-        File updatedFile =new File("src/secur3dit/ui/images/output.png");
+        File updatedFile = new File("src/secur3dit/ui/images/output.png");
         Image updatedImage = new Image(updatedFile.toURI().toString(), 553, 443, true, true);
         updatedImageView.setImage(updatedImage);
         updatedImageView.setPreserveRatio(false);
@@ -108,16 +107,16 @@ public class UifxmlController implements Initializable {
     void saveImage(ActionEvent e) throws IOException {
         FileChooser f = new FileChooser();
         File file = f.showSaveDialog(null);
-        if(file!=null){
+        if (file != null) {
             ImageIO.write(output, "png", file);
         }
-        
+
     }
 
     boolean checkImageInput() {
         if (file == null) {
             Alert a1 = new Alert(AlertType.ERROR);
-            a1.setTitle("Secur3dit");
+            a1.setTitle("SECUR3DIT");
             a1.setHeaderText("Error! Image not found");
             a1.showAndWait();
             return false;
@@ -127,9 +126,16 @@ public class UifxmlController implements Initializable {
 
     void displayMessage() {
         Alert a = new Alert(AlertType.INFORMATION);
-        a.setTitle("Secur3dit");
+        a.setTitle("S3CUR3DIT");
         a.setHeaderText("Filter applied.");
         a.show();
+    }
+
+    void displayError() {
+        Alert a = new Alert(AlertType.ERROR);
+        a.setTitle("SECUR3DIT");
+        a.setHeaderText("Something went wrong. Try Again");
+        a.showAndWait();
     }
 
     @FXML
@@ -155,10 +161,14 @@ public class UifxmlController implements Initializable {
             a.show();
             return;
         }
-        this.output = Filters.addWatermark(this.output, watermarkText);
+        try {
+            this.output = Filters.addWatermark(this.output, watermarkText);
+        } catch (NullPointerException exc) {
+            displayError();
+        }
         Alert a = new Alert(AlertType.INFORMATION);
         ImageIO.write(output, "png", new File("src/secur3dit/ui/images/output.png"));
-        a.setTitle("Secur3dit");
+        a.setTitle("SECUR3DIT");
         a.setHeaderText("Watermark added successfully");
         a.show();
         updateImage();
@@ -171,7 +181,11 @@ public class UifxmlController implements Initializable {
             return;
         }
         this.output = Filters.grayscale(this.output);
-        ImageIO.write(output, "png", new File("src/secur3dit/ui/images/output.png"));
+        try {
+            ImageIO.write(output, "png", new File("src/secur3dit/ui/images/output.png"));
+        } catch (ArrayIndexOutOfBoundsException exc) {
+            displayError();
+        }
         updateImage();
         displayMessage();
     }
@@ -183,7 +197,11 @@ public class UifxmlController implements Initializable {
         }
 
         this.output = Filters.sepia(this.output);
-        ImageIO.write(output, "png", new File("src/secur3dit/ui/images/output.png"));
+        try {
+            ImageIO.write(output, "png", new File("src/secur3dit/ui/images/output.png"));
+        } catch (ArrayIndexOutOfBoundsException exc) {
+            displayError();
+        }
         updateImage();
         displayMessage();
     }
@@ -193,8 +211,11 @@ public class UifxmlController implements Initializable {
         if (!checkImageInput()) {
             return;
         }
-
-        this.output = Filters.negative(this.output);
+        try {
+            this.output = Filters.negative(this.output);
+        } catch (ArrayIndexOutOfBoundsException exc) {
+            displayError();
+        }
         ImageIO.write(output, "png", new File("src/secur3dit/ui/images/output.png"));
         updateImage();
         displayMessage();
@@ -205,7 +226,11 @@ public class UifxmlController implements Initializable {
         if (!checkImageInput()) {
             return;
         }
-        this.output = Filters.detectEdges(this.output);
+        try {
+            this.output = Filters.detectEdges(this.output);
+        } catch (ArrayIndexOutOfBoundsException exc) {
+            displayError();
+        }
         ImageIO.write(output, "png", new File("src/secur3dit/ui/images/output.png"));
         displayMessage();
         updateImage();
@@ -216,8 +241,11 @@ public class UifxmlController implements Initializable {
         if (!checkImageInput()) {
             return;
         }
-
-        this.output = Filters.mirror(this.output, true);
+        try {
+            this.output = Filters.mirror(this.output, true);
+        } catch (ArrayIndexOutOfBoundsException exc) {
+            displayError();
+        }
         ImageIO.write(output, "png", new File("src/secur3dit/ui/images/output.png"));
         updateImage();
         Alert a = new Alert(AlertType.INFORMATION);
@@ -232,7 +260,11 @@ public class UifxmlController implements Initializable {
             return;
         }
 
-        this.output = Filters.mirror(this.output, false);
+        try {
+            this.output = Filters.mirror(this.output, false);
+        } catch (ArrayIndexOutOfBoundsException exc) {
+            displayError();
+        }
         ImageIO.write(output, "png", new File("src/secur3dit/ui/images/output.png"));
         updateImage();
         displayMessage();
@@ -243,8 +275,11 @@ public class UifxmlController implements Initializable {
         if (!checkImageInput()) {
             return;
         }
-
-        this.output = Filters.posterize(this.output);
+        try {
+            this.output = Filters.posterize(this.output);
+        } catch (ArrayIndexOutOfBoundsException exc) {
+            displayError();
+        }
         ImageIO.write(output, "png", new File("src/secur3dit/ui/images/output.png"));
         updateImage();
         displayMessage();
@@ -310,25 +345,29 @@ public class UifxmlController implements Initializable {
         if (!checkImageInput()) {
             return;
         }
-        this.output = Filters.pixelate(this.output, (int) pixelateSlider.getValue());
+        try {
+            this.output = Filters.pixelate(this.output, (int) pixelateSlider.getValue());
+        } catch (ArrayIndexOutOfBoundsException exc) {
+            displayError();
+        }
         ImageIO.write(output, "png", new File("src/secur3dit/ui/images/output.png"));
         updateImage();
         displayMessage();
 
     }
 
-   
     @FXML
     void backToHomepage(MouseEvent e) throws IOException {
         Main.stage.getScene().setRoot(FXMLLoader.load(getClass().getResource("homepage.fxml")));
 
     }
+
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        
+
         advanceEdits.setVisible(false);
         watermarkText = "";
         brightenVal.textProperty().bind(
@@ -361,7 +400,7 @@ public class UifxmlController implements Initializable {
                         rotateSlider.valueProperty()
                 )
         );
-        
+
         brightenVal.setVisible(false);
         blurVal.setVisible(false);
         pixelateVal.setVisible(false);
