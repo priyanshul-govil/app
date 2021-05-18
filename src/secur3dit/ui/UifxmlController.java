@@ -126,7 +126,7 @@ public class UifxmlController implements Initializable {
 
     void displayMessage() {
         Alert a = new Alert(AlertType.INFORMATION);
-        a.setTitle("S3CUR3DIT");
+        a.setTitle("SECUR3DIT");
         a.setHeaderText("Filter applied.");
         a.show();
     }
