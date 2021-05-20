@@ -137,7 +137,8 @@ public class encryptionController implements Initializable {
                 a2.show();
             }
         } catch (NoSuchAlgorithmException noSuchAlgorithmException) {
-            
+            displayError();
+            return;
         } catch (IOException iOException) {
             displayError();
             return;

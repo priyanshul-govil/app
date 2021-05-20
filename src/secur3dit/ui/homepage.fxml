@@ -15,7 +15,7 @@
 
 <AnchorPane maxHeight="723" maxWidth="1139" minHeight="723" minWidth="1139" prefHeight="723.0" prefWidth="1139.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="secur3dit.ui.homepageController">
    <children>
-      <HBox layoutX="-2.0" prefHeight="27.0" prefWidth="1138.0" styleClass="dashboard-top" stylesheets="@design.css">
+      <HBox layoutX="-2.0" prefHeight="27.0" prefWidth="1142.0" styleClass="dashboard-top" stylesheets="@design.css">
          <children>
             <Label prefHeight="25.0" prefWidth="166.0" text="SECUR3DIT" textFill="WHITE">
                <HBox.margin>
@@ -27,9 +27,9 @@
             </Label>
          </children>
       </HBox>
-      <Pane fx:id="mainArea" layoutY="26.0" prefHeight="696.0" prefWidth="1138.0">
+      <Pane fx:id="mainArea" layoutY="26.0" prefHeight="696.0" prefWidth="1142.0">
          <children>
-            <ImageView fitHeight="696.0" fitWidth="1138.0" pickOnBounds="true">
+            <ImageView fitHeight="696.0" fitWidth="1140.0" pickOnBounds="true">
                <image>
                   <Image url="@images/homepageBG.jpg" />
                </image>
@@ -71,7 +71,7 @@
             </ImageView>
             <WebView fx:id="myweb" layoutX="260.0" layoutY="-2.0" prefHeight="696.0" prefWidth="877.0" />
             <FontAwesomeIcon fx:id="closeBtn" glyphName="CLOSE" layoutX="1104.0" layoutY="25.0" onMouseClicked="#closeGI" size="25" />
-            <ImageView fx:id="about" fitHeight="696.0" fitWidth="1138.0" layoutX="-1.0" layoutY="-3.0" pickOnBounds="true">
+            <ImageView fx:id="about" fitHeight="696.0" fitWidth="1139.0" layoutX="-1.0" layoutY="-3.0" pickOnBounds="true">
                <image>
                   <Image url="@images/about.png" />
                </image>
