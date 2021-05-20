@@ -30,7 +30,7 @@ import secur3dit.crypto.AES256CTR;
 /**
  * FXML Controller class
  *
- * @author naman
+ * @author Naman Nihal
  */
 public class encryptionController implements Initializable {
 
@@ -236,6 +236,7 @@ public class encryptionController implements Initializable {
     }
     @FXML
     void viewPasswordDecryption(MouseEvent m){
+        
         if(decryptionToggle==false){
             decryptionToggleOff.setVisible(false);
             decryptionToggleOnn.setVisible(true);
@@ -265,7 +266,6 @@ public class encryptionController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         
-        // TODO
         toggleOn.setVisible(false);
         decryptionToggleOnn.setVisible(false);
         encryptyTextField.setVisible(false);
