@@ -28,7 +28,7 @@ import secur3dit.filters.Filters;
 /**
  * FXML Controller class
  *
- * @author naman
+ * @author Naman Nihal
  */
 public class UifxmlController implements Initializable {
 
@@ -76,7 +76,7 @@ public class UifxmlController implements Initializable {
     private Button insertNewImageButton;
 
     @FXML
-    private void insertImage(ActionEvent e) throws IOException {
+    public void insertImage(ActionEvent e) throws IOException {
         FileChooser f = new FileChooser();
         file = f.showOpenDialog(null);
 
@@ -104,7 +104,7 @@ public class UifxmlController implements Initializable {
     }
 
     @FXML
-    void saveImage(ActionEvent e) throws IOException {
+    public void saveImage(ActionEvent e) throws IOException {
         FileChooser f = new FileChooser();
         File file = f.showSaveDialog(null);
         if (file != null) {
@@ -154,7 +154,7 @@ public class UifxmlController implements Initializable {
             return;
         }
         watermarkText = text.getText();
-        if (watermarkText == "") {
+        if ("".equals(watermarkText)) {
             Alert a = new Alert(AlertType.ERROR);
             a.setTitle("SECUR3DIT");
             a.setHeaderText("Text is empty");

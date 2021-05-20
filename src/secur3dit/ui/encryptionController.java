@@ -5,6 +5,9 @@ import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.BufferOverflowException;
+import java.nio.ReadOnlyBufferException;
+import java.nio.file.InvalidPathException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -27,7 +30,7 @@ import secur3dit.crypto.AES256CTR;
 /**
  * FXML Controller class
  *
- * @author naman
+ * @author Naman Nihal
  */
 public class encryptionController implements Initializable {
 
@@ -94,8 +97,14 @@ public class encryptionController implements Initializable {
         }
         return true;
     }
+    void displayError(){
+        Alert a = new Alert(AlertType.ERROR);
+        a.setTitle("SECUR3DIT");
+        a.setHeaderText("Something went wrong. Try again");
+        a.showAndWait();
+    }
     @FXML
-    void encrypt(ActionEvent e)throws NoSuchAlgorithmException, IOException{
+    void encrypt(ActionEvent e){
         if(encryptionToggle){
             encryptKey.setText(encryptyTextField.getText());
             encryptKey1.setText(encryptTextField1.getText());
@@ -103,29 +112,51 @@ public class encryptionController implements Initializable {
         if(!checkFile() || !checkPassword(encryptKey.getText(),encryptKey1.getText()) || !checkFile()){
             return;
         }
-        Alert a1 = new Alert(AlertType.INFORMATION);
-        a1.getButtonTypes().removeAll(ButtonType.OK);
-        a1.getButtonTypes().addAll(ButtonType.YES, ButtonType.NO);
-        a1.setTitle("SECUR3DIT");
-        a1.setHeaderText("Remember to store your password.");
-        a1.setContentText("Decrypting files with wrong password can \npermanently encrypt the file. "
-                + "\nContinue with Encryption ? ");
-        
-        Optional<ButtonType> choice  = a1.showAndWait();
-        if(choice.get()==ButtonType.YES){
-            String temp =encryptKey1.getText();
-            AES256CTR enc = new AES256CTR(temp);
-            AES256CTR.encrypt(enc, file.getPath());
-            Alert a = new Alert(AlertType.INFORMATION);
-            a.setTitle("SECUR3DIT");
-            a.setHeaderText("File Encrypted");
-            a.showAndWait();
-        }
-        else if(choice.get()==ButtonType.NO){
-            Alert a2 = new Alert(AlertType.INFORMATION);
-            a2.setTitle("SECUR3DIT");
-            a2.setHeaderText("Encryption Aborted");
-            a2.show();
+        try {
+            Alert a1 = new Alert(AlertType.INFORMATION);
+            a1.getButtonTypes().removeAll(ButtonType.OK);
+            a1.getButtonTypes().addAll(ButtonType.YES, ButtonType.NO);
+            a1.setTitle("SECUR3DIT");
+            a1.setHeaderText("Remember to store your password.");
+            a1.setContentText("Decrypting files with wrong password can \npermanently encrypt the file. "
+                    + "\nContinue with Encryption? ");
+            
+            Optional<ButtonType> choice = a1.showAndWait();
+            if (choice.get() == ButtonType.YES) {
+                String temp = encryptKey1.getText();
+                AES256CTR enc = new AES256CTR(temp);
+                AES256CTR.encrypt(enc, file.getPath());
+                Alert a = new Alert(AlertType.INFORMATION);
+                a.setTitle("SECUR3DIT");
+                a.setHeaderText("File Encrypted");
+                a.showAndWait();
+            } else if (choice.get() == ButtonType.NO) {
+                Alert a2 = new Alert(AlertType.INFORMATION);
+                a2.setTitle("SECUR3DIT");
+                a2.setHeaderText("Encryption Aborted");
+                a2.show();
+            }
+        } catch (NoSuchAlgorithmException noSuchAlgorithmException) {
+            displayError();
+            return;
+        } catch (IOException iOException) {
+            displayError();
+            return;
+        } catch (OutOfMemoryError outOfMemoryError) {
+            displayError();
+            return;
+        } catch (SecurityException securityException) {
+            displayError();
+            return;
+        } catch (InvalidPathException invalidPathException) {
+            displayError();
+            return;
+        } catch (ReadOnlyBufferException readOnlyBufferException) {
+            displayError();
+            return;
+        } catch (BufferOverflowException bufferOverflowException) {
+            displayError();
+            return;
         }
     }
     @FXML
@@ -137,28 +168,51 @@ public class encryptionController implements Initializable {
         if(!checkFile() || !checkPassword(decryptKey.getText(),decryptKey1.getText())){
             return;
         }
-        Alert a1 = new Alert(AlertType.INFORMATION);
-        a1.getButtonTypes().removeAll(ButtonType.OK);
-        a1.getButtonTypes().addAll(ButtonType.YES, ButtonType.NO);
-       
-        a1.setTitle("SECUR3DIT");
-        a1.setHeaderText("Ensure password is correct");
-        a1.setContentText("Decrypting files with wrong password can \npermanently encrypt the file. "
-                + "\nContinue with Decryption ? ");
-        Optional<ButtonType> choice  = a1.showAndWait();
-        if(choice.get()==ButtonType.YES){
-            AES256CTR dec = new AES256CTR(decryptKey.getText());
-            AES256CTR.decryption(dec,file.getPath());
-            Alert a = new Alert(AlertType.INFORMATION);
-            a.setTitle("SECUR3DIT");
-            a.setHeaderText("File Decrypted");
-            a.showAndWait();
-        }else if(choice.get()==ButtonType.NO){
-            Alert a2 = new Alert(AlertType.INFORMATION);
-            a2.setTitle("SECUR3DIT");
-            a2.setHeaderText("Decryption Aborted");
-            a2.show();
-        }
+        try {
+            Alert a1 = new Alert(AlertType.INFORMATION);
+            a1.getButtonTypes().removeAll(ButtonType.OK);
+            a1.getButtonTypes().addAll(ButtonType.YES, ButtonType.NO);
+            
+            a1.setTitle("SECUR3DIT");
+            a1.setHeaderText("Ensure password is correct");
+            a1.setContentText("Decrypting files with wrong password can \npermanently encrypt the file. "
+                    + "\nContinue with Decryption? ");
+            Optional<ButtonType> choice = a1.showAndWait();
+            if (choice.get() == ButtonType.YES) {
+                AES256CTR dec = new AES256CTR(decryptKey.getText());
+                AES256CTR.decryption(dec, file.getPath());
+                Alert a = new Alert(AlertType.INFORMATION);
+                a.setTitle("SECUR3DIT");
+                a.setHeaderText("File Decrypted");
+                a.showAndWait();
+            } else if (choice.get() == ButtonType.NO) {
+                Alert a2 = new Alert(AlertType.INFORMATION);
+                a2.setTitle("SECUR3DIT");
+                a2.setHeaderText("Decryption Aborted");
+                a2.show();
+            }
+        } catch (NoSuchAlgorithmException noSuchAlgorithmException) {
+            displayError();
+            return;
+        } catch (IOException iOException) {
+            displayError();
+            return;
+        } catch (OutOfMemoryError outOfMemoryError) {
+            displayError();
+            return;
+        } catch (SecurityException securityException) {
+            displayError();
+            return;
+        } catch (InvalidPathException invalidPathException) {
+            displayError();
+            return;
+        } catch (ReadOnlyBufferException readOnlyBufferException) {
+            displayError();
+            return;
+        } catch (BufferOverflowException bufferOverflowException) {
+            displayError();
+            return;
+        }   
     }
     @FXML
     void viewPassword(MouseEvent m){
@@ -183,6 +237,7 @@ public class encryptionController implements Initializable {
     }
     @FXML
     void viewPasswordDecryption(MouseEvent m){
+        
         if(decryptionToggle==false){
             decryptionToggleOff.setVisible(false);
             decryptionToggleOnn.setVisible(true);
@@ -212,7 +267,6 @@ public class encryptionController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         
-        // TODO
         toggleOn.setVisible(false);
         decryptionToggleOnn.setVisible(false);
         encryptyTextField.setVisible(false);

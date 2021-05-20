@@ -9,11 +9,11 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="695.0" prefWidth="1130.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="secur3dit.ui.encryptionController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="695.0" prefWidth="1140.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="secur3dit.ui.encryptionController">
    <children>
-      <ImageView fitHeight="696.0" fitWidth="1130.0" pickOnBounds="true">
+      <ImageView fitHeight="696.0" fitWidth="1140.0" pickOnBounds="true">
          <image>
-            <Image url="@images/wallpapersden.com_color-palette-abstract-4k_1920x1080.jpg" />
+            <Image url="@images/filterAndEncryptionBG.jpg" />
          </image>
       </ImageView>
       <Button layoutX="537.0" layoutY="148.0" mnemonicParsing="false" onAction="#encrypt" prefHeight="99.0" prefWidth="353.0" styleClass="Filterbutton" stylesheets="@filterDesign.css" text="ENCRYPT">
@@ -69,7 +69,7 @@
             <Font name="C059-Bold" size="29.0" />
          </font>
       </Button>
-      <FontAwesomeIcon glyphName="ARROW_LEFT" layoutX="1090.0" layoutY="27.0" onMouseClicked="#backToHomepage" size="30" />
+      <FontAwesomeIcon glyphName="ARROW_LEFT" layoutX="1107.0" layoutY="36.0" onMouseClicked="#backToHomepage" size="30" text="" />
       <Button fx:id="importButton3" mnemonicParsing="false" onAction="#importFile" prefHeight="34.0" prefWidth="165.0" styleClass="Insertbutton" stylesheets="@filterDesign.css" text="IMPORT NEW FILE">
          <font>
             <Font name="System Bold" size="13.0" />
