@@ -240,10 +240,6 @@ final class Helpers {
      */
     static void lightDial(BufferedImage image, double dial) throws ArrayIndexOutOfBoundsException {
 
-        if (dial > 1.0 || dial < 1.0) {
-            return;
-        }
-
         double limit = (dial > 0.0) ? 255.0 : 0.0;
 
         for (int i = 0; i < image.getHeight(); ++i) {
