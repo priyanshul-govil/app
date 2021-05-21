@@ -32,7 +32,7 @@ You can find the produced files under `output` directory. All you have to do is 
 
 1. [Naman Nihal](https://github.com/namannihal) 
 2. [Priyanshul Govil](https://github.com/priyanshul-govil) 
-3. [Vivek Nathani](https://github.com/secur3dit/standard) 
+3. [Vivek Nathani](https://github.com/viveknathani) 
 
 ## Contributing
 
