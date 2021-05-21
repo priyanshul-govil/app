@@ -29,6 +29,7 @@ subprocess.run(javac + "ui\\" + "UifxmlController.java" + end_at, shell=True)
 
 # Copy manifest.txt file to src\ for .jar creation
 copy_manifest = "copy manifest.txt ..\\src"
+subprocess.run(copy_manifest, shell=True)
 
 # Make .jar file
 jar = "cd ..\\src && jar cvfm app.jar manifest.txt secur3dit"
