@@ -17,7 +17,7 @@ The project has two dependencies which need to be placed under `build/lib`
 
 The tree view of the build directory should look like the following. 
 
-![build](./docs/build.png)
+![build](./docs/build.PNG)
 
 Once you have this ready, fire up your command prompt and `cd` into the root directory of this project. 
 
