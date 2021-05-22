@@ -2,7 +2,7 @@
 
 secur3dit is a free and open-source tool that helps you edit images and encrypt files.
 
-![Logo](./docs/Logo.png)
+<img src="./docs/Logo.png" alt="logo" width="400"/>
 
 ## Tech Stack
 
